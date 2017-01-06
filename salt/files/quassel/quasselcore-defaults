@@ -1,0 +1,8 @@
+# Defaults for quasselcore initscript
+# sourced by /etc/init.d/quasselcore
+
+# Loglevel Debug|Info|Warning|Error. Default is: Info
+LOGLEVEL="Info"
+
+# The port quasselcore will listen at. Default is: 4242
+PORT="{{ salt['pillar.get']('quassel:core:port', '4242') }}"

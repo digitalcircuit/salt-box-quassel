@@ -1,0 +1,21 @@
+# Favicon include - quassel
+# ------------------------
+# Specify the following in the server configuration file within the main server block
+	## [Favicon - quassel]
+	#include includes/files/favicon/quassel;
+
+# Favicon include - pawprint
+#  https://regex101.com/
+#  \/STRING($|\/)   matches */string, */string/*, but not /string*
+#  \/STRING\/?$     matches */string, */string/
+#  \/STRING$        matches */string
+#  ^STRING\/        matches string/*
+#  Note: escape '.' in regex like so - '\.'
+#  Use "quotation marks" to allow for {} inside regex
+#  Return without 302 will generate permanent redirects
+
+# -- favicons
+location ~ "^\/(apple-touch-icon|favicon|mstile|android-chrome|safari-pinned-tab|browserconfig)(-\d{1,3}x\d{1,3}|)\.(png|ico|svg|xml)$" {
+	# Redirect the root to where the favicons are stored
+	root /var/www/_common/favicon/quassel;
+}

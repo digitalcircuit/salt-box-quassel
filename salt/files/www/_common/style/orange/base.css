@@ -1,0 +1,87 @@
+body {
+	font-family: 'Open Sans', arial; /* I prefer non-serif fonts */
+}
+
+/* https://stackoverflow.com/questions/248011/how-do-i-wrap-text-in-a-pre-tag */
+pre {
+	white-space: pre-wrap;       /* CSS 3 */
+	white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+	white-space: -pre-wrap;      /* Opera 4-6 */
+	white-space: -o-pre-wrap;    /* Opera 7 */
+	word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+/* Based on Github's <code> tag */
+code {
+	padding-top: 0.4em;
+	padding-bottom: 0.4em;
+	/* Originally 0.2em */
+	padding-left: 0.4em;
+	padding-right: 0.4em;
+	/* Originally unset */
+	margin: 0;
+	font-size: 90%;
+	/* Originally 85% */
+	border-radius: 3px;
+}
+
+div#wrap {
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 50em;
+	padding: 1.5em;
+}
+
+div.subtext {
+	padding-left: 0.5em;
+}
+
+img.img_embed {
+	max-height: 35em;
+	max-width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	padding-bottom: 1em;
+}
+
+img.img_embed_comic {
+	max-height: 100%;
+}
+
+img.img_link_icon {
+	vertical-align: middle;
+	padding-right: 0.5em;
+}
+
+/* Based on justJanne's Material design CSS */
+a.link_button {
+	border-radius: 3px;
+	display: inline-block;
+	padding: 0.5em;
+	margin: 3px;
+	min-width: 5rem;
+	text-align: center;
+	text-decoration: none;
+}
+
+a.link_button_blue {
+	background-color: #4d90fe;
+	border: 1px solid #3079ed;
+	color: white !important;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.1);
+}
+
+a.link_button_orange {
+	background-color: #fb8c00;
+	border: 1px solid #f57c00;
+	color: white !important;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.1);
+}
+
+a.link_button_gray {
+	background-color: #546e7a;
+	border: 1px solid #455a64;
+	color: white !important;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.1);
+}

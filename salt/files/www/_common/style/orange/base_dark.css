@@ -1,0 +1,21 @@
+body {
+	background-color: #282828;
+	color: white;
+}
+
+a:link {
+	color: #ff8000;
+}
+
+a:visited {
+	color: #ba4f0e;
+}
+
+div#wrap {
+	background-color: #461900;
+}
+
+code {
+	border:1px solid #1212;
+	background-color: rgba(255,255,255,0.14);
+}

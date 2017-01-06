@@ -1,0 +1,3 @@
+# To include a style, use...
+# > sudo ln -s /var/www/_common/style/orange /var/www/html_main_site/style/theme
+# etc
