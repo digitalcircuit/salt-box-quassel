@@ -86,6 +86,7 @@ quassel-web.service:
     - template: jinja
   service.running:
     - name: quassel-web.service
+    - enable: True
     - require:
       - sls: 'quassel'
       - sls: 'webserver'
