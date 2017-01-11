@@ -7,3 +7,11 @@
 
 # Charset
 charset UTF-8;
+
+# Avoid MIME-type sniffing
+# See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
+add_header X-Content-Type-Options nosniff;
+
+# Avoid clickjacking attacks
+# See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
+add_header X-Frame-Options SAMEORIGIN;
