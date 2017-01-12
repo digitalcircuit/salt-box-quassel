@@ -60,7 +60,7 @@ qweb_install ()
 		cd "$GIT_REPODIR" || return 1
 		
 		GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-		if [[ $GIT_BRANCH == "HEAD" ]]; then
+		if [[ "$GIT_BRANCH" == "HEAD" ]]; then
 			# FIXME: We're not on a branch, can't git pull directly.
 			# Temporarily check 'master' to update
 			git checkout master || return 1
@@ -102,6 +102,13 @@ qweb_has_update() {
 	local REMOTE=$(git rev-parse "$UPSTREAM")
 	local BASE=$(git merge-base @ "$UPSTREAM")
 	
+	# Edited: make sure we're on a branch
+	GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+	if [[ "$GIT_BRANCH" == "HEAD" && "$UPSTREAM" == "@{u}" ]]; then
+		echo "Can't check for updates, not currently on a branch and no specific branch or commit hash specified!  Try specifying 'master' as the branch." >&2
+		return 1
+	fi
+
 	if [ $LOCAL = $REMOTE ]; then
 		# Up-to-date
 		return 1
@@ -127,7 +134,11 @@ qweb_has_update() {
 
 qweb_update() {
 	local GIT_CHECKOUT="${1:-''}"
-	local GIT_UPSTREAM="${1:-'@{u}'}"
+	local GIT_UPSTREAM="@{u}"
+	if [[ $GIT_CHECKOUT != "" ]]; then
+		GIT_UPSTREAM="$GIT_CHECKOUT"
+	fi
+
 	EXPECTED_ARGS=1
 	if [ $# -gt $EXPECTED_ARGS ]; then
 		echo "Usage: `basename $0` qweb_update {optional: branch or commit hash, defaults to nothing}" >&2
