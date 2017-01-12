@@ -40,7 +40,7 @@ quassel-web.user-rw:
 #      - /home/quassel-web/.nano"
 #      - /home/quassel-web/.cache"
 
-quassel-web.setup.A:
+quassel-web.setup.script:
   file.managed:
     # Basic configuration
     - name: /home/{{ salt['pillar.get']('quassel:web:username', 'quassel-web') }}/quassel_web_root/var-root-dir.sh
@@ -48,7 +48,17 @@ quassel-web.setup.A:
     - user: {{ salt['pillar.get']('quassel:web:username', 'quassel-web') }}
     - group: {{ salt['pillar.get']('quassel:web:username', 'quassel-web') }}
 
-quassel-web.setup.B:
+# Stop the Quassel Web service if already running.. only if changes will be
+# made.  It'll be started back up by the later service check.
+quassel-web.setup.stop-for-deploy:
+  service.dead:
+    - name: quassel-web.service
+    # Only stop if changes are going to be made
+    - prereq:
+      - cmd: quassel-web.setup.deploy
+      - file: quassel-web.setup.configure
+
+quassel-web.setup.deploy:
   file.recurse:
     # Runtime scripts
     - name: /home/{{ salt['pillar.get']('quassel:web:username', 'quassel-web') }}/quassel_web_root/scripts
@@ -66,7 +76,7 @@ quassel-web.setup.B:
     # Don't run as root
     - runas: {{ salt['pillar.get']('quassel:web:username', 'quassel-web') }}
 
-quassel-web.setup.C:
+quassel-web.setup.configure:
   file.managed:
     # Quassel Web configuration
     - name: /home/{{ salt['pillar.get']('quassel:web:username', 'quassel-web') }}/quassel_web_root/qweb/quassel-webserver/settings-user.js
@@ -76,7 +86,7 @@ quassel-web.setup.C:
     - template: jinja
     - require:
       # Don't try to set this up until after the repository's downloaded
-      - cmd: 'quassel-web.setup.B'
+      - cmd: 'quassel-web.setup.deploy'
 
 # Set up the systemd service
 quassel-web.service:
