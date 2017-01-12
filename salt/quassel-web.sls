@@ -97,6 +97,9 @@ quassel-web.service:
   service.running:
     - name: quassel-web.service
     - enable: True
+    - watch:
+      # Restart service on changes, wait for service to deployed before start
+      - file: 'quassel-web.service'
     - require:
       - sls: 'quassel'
       - sls: 'webserver'
