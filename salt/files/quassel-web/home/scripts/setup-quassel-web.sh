@@ -28,7 +28,7 @@ qweb_install ()
 	local GIT_WORKDIR="$QUASSEL_WEB_WORKDIR"
 	local GIT_REPODIR="$QUASSEL_WEB_GITDIR"
 
-	local GIT_CHECKOUT="${1:-''}"
+	local GIT_CHECKOUT=${1:-''}
 	EXPECTED_ARGS=1
 	if [ $# -gt $EXPECTED_ARGS ]; then
 		echo "Usage: `basename $0` qweb_install {optional: branch or commit hash, defaults to nothing}" >&2
@@ -133,7 +133,7 @@ qweb_has_update() {
 }
 
 qweb_update() {
-	local GIT_CHECKOUT="${1:-''}"
+	local GIT_CHECKOUT=${1:-''}
 	local GIT_UPSTREAM="@{u}"
 	if [[ $GIT_CHECKOUT != "" ]]; then
 		GIT_UPSTREAM="$GIT_CHECKOUT"
