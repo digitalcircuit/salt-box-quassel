@@ -5,7 +5,7 @@ module.exports = {
         initialBacklogLimit: 20,  // Amount of backlogs to fetch per buffer on connection
         backlogLimit: 100,  // Amount of backlogs to fetch per buffer after first retrieval
         securecore: true,  // Connect to the core using SSL
-        theme: 'default',  // Default UI theme,
+        theme: 'default',  // Default UI theme
         perchathistory: true,  // Separate history per buffer
         displayfullhostmask: false,  // Display full hostmask instead of just nicks in messages
         emptybufferonswitch: 900,  // Trim buffer when switching to another buffer. Can be `false` or a positive integer
@@ -22,6 +22,6 @@ module.exports = {
 
 
     themes: ['default', 'darksolarized'],  //  Available themes
-    forcedefault: true,  // Will force default host and port to be used, and will hide the corresponding fields in the UI
+    forcedefault: true,  // Will force default host and port to be used if true, and will hide the corresponding fields in the UI.
     prefixpath: '/chat'  // Configure this if you use a reverse proxy
 };
