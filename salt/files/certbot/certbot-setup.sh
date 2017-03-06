@@ -52,7 +52,7 @@ certbot_reload_quassel ()
 {
 	local EXPECTED_ARGS=1
 	if [ $# -ne $EXPECTED_ARGS ]; then
-		echo "Usage: `basename "$0"` [certbot_is_configured] {system hostname}" >&2
+		echo "Usage: `basename "$0"` [certbot_reload_quassel] {system hostname}" >&2
 		return 1
 	fi
 	local CERTBOT_DOMAIN="$1"
