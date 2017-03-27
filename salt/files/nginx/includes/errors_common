@@ -6,6 +6,7 @@
 	#
 
 # Provide custom error pages for the following
+error_page 401 /errors/401.html;
 error_page 403 /errors/403.html;
 error_page 404 /errors/404.html;
 error_page 500 502 503 504 /errors/50x.html;
