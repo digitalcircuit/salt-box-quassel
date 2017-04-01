@@ -19,7 +19,7 @@
 	<h3><a name="header_sub"><img class="img_link_icon" src="/favicon-32x32.png?v=1" width="32px" height="32px">{{ salt['pillar.get']('display:client:name', 'Quassel') }}</a></h3>
 	<p>
 		<a class="link_button link_button_blue" href="/chat">Chat</a><a class="link_button link_button_blue" href="/search">Search</a><br>
-		<a class="link_button link_button_gray" href="http://quassel-irc.org/downloads">Desktop</a><a class="link_button link_button_gray" href="https://play.google.com/store/apps/details?id=com.iskrembilen.quasseldroid">Mobile</a>{% if salt['pillar.get']('display:client:show_beta', False) == True -%}<a class="link_button link_button_gray" href="https://quassel.romibi.ch/">Desktop Alpha</a><a class="link_button link_button_gray" href="https://dl.kuschku.de/releases/quasseldroid-ng/">Mobile Alpha</a>{%- endif %}
+		<a class="link_button link_button_gray" href="http://quassel-irc.org/downloads" rel="external nofollow">Desktop</a><a class="link_button link_button_gray" href="https://play.google.com/store/apps/details?id=com.iskrembilen.quasseldroid" rel="external nofollow">Mobile</a>{% if salt['pillar.get']('display:client:show_beta', False) == True -%}<a class="link_button link_button_gray" href="https://quassel.romibi.ch/" rel="external nofollow">Desktop Alpha</a><a class="link_button link_button_gray" href="https://dl.kuschku.de/releases/quasseldroid-ng/" rel="external nofollow">Mobile Alpha</a>{%- endif %}
 	</p>
 	<div class="subtext">
 		Connect to <code>{{ salt['pillar.get']('system:hostname', 'dev') }}</code>, port <code>{{ salt['pillar.get']('quassel:core:port', '4242') }}</code>
