@@ -56,7 +56,7 @@ certbot.configure:
     # Mark as executable
     - mode: 755
   cmd.run:
-    # Configure the Quassel core to use the Postgres database
+    # Configure Certbot to acquire the certificates for the first time
     - name: /root/salt/certbot/certbot-setup.sh configure "{{ salt['pillar.get']('system:hostname', 'dev') }}" "{{ salt['pillar.get']('certbot:testing', 'false') }}" "{{ salt['pillar.get']('certbot:account:email') }}"
       # {system hostname} {testing mode - true/false} {account recovery email}
 #    - source: salt://files/certbot/certbot-setup.sh
