@@ -54,6 +54,28 @@ img.img_link_icon {
 	padding-right: 0.5em;
 }
 
+img.img_link_icon_small {
+	width: 2em;
+	height: 2em;
+}
+
+ul.list_simple {
+	list-style-type: none;
+	padding: 0px;
+	margin: 0px;
+}
+
+ul.list_apps {
+	margin: auto;
+	max-width: 80%;
+	width: 300px;
+	min-width: 200px;
+}
+
+a.list_button {
+	width: 100%;
+}
+
 /* Based on justJanne's Material design CSS */
 a.link_button {
 	border-radius: 3px;
@@ -83,5 +105,12 @@ a.link_button_gray {
 	background-color: #546e7a;
 	border: 1px solid #455a64;
 	color: white !important;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.1);
+}
+
+a.link_button_light_gray {
+	background-color: #eceff1;
+	border: 1px solid #cfd8dc;
+	color: black !important;
 	text-shadow: 0 1px rgba(0, 0, 0, 0.1);
 }
