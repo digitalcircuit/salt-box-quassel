@@ -15,3 +15,9 @@ add_header X-Content-Type-Options nosniff;
 # Avoid clickjacking attacks
 # See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
 add_header X-Frame-Options SAMEORIGIN;
+
+# Enable Cross-Domain policies only from the server root
+add_header X-Permitted-Cross-Domain-Policies master-only;
+
+# Enable XSS protection
+add_header X-XSS-Protection "1; mode=block";
