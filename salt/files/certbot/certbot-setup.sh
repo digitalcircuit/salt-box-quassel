@@ -13,6 +13,12 @@ CERTBOT_PATH_BASE="/etc/letsencrypt"
 CERTBOT_PATH_KEYS="$CERTBOT_PATH_BASE/live"
 CERTBOT_PATH_RENEWAL="$CERTBOT_PATH_BASE/renewal"
 
+# Handle automatic renewal
+#CERTBOT_CMD_HOOK_PRE="/bin/run-parts /etc/letsencrypt/pre-hook.d/"
+CERTBOT_PATH_HOOK_POST="/etc/letsencrypt/post-hook.d/"
+CERTBOT_CMD_HOOK_POST="/bin/run-parts $CERTBOT_PATH_HOOK_POST"
+#CERTBOT_CMD_HOOK_RENEW="/bin/run-parts /etc/letsencrypt/renew-hook.d/"
+
 # Standalone, webroot via nginx, non-interactive
 CERTBOT_TOOL_OPTIONS="--agree-tos --webroot --webroot-path /var/lib/letsencrypt --non-interactive"
 CERTBOT_TOOL_OPTIONS_RENEW="--non-interactive"
@@ -129,13 +135,18 @@ certbot_configure () {
 	
 	if ! certbot_is_configured "$CERTBOT_DOMAIN"; then
 		echo " * Requesting certificates..."
+		# Make sure directories exist
+		if [ ! -d "$CERTBOT_PATH_HOOK_POST" ]; then
+			sudo mkdir "$CERTBOT_PATH_HOOK_POST"
+		fi
 		# Clean up any existing live directories, avoids a crash in 0.9.3.
 		#   CertStorageError: live directory exists for quassel.test.zorro.casa
 		# TODO: Is there a better way around this?  It wipes out existing live keys.
 		if [ -f "$CERTBOT_PATH_KEYS/$CERTBOT_DOMAIN/is_dummy_certs" ]; then			
 			sudo rm --recursive "$CERTBOT_PATH_KEYS/$CERTBOT_DOMAIN"
 		fi
-		"$CERTBOT_TOOL" certonly --email "$CERTBOT_EMAIL" --domains "$CERTBOT_DOMAIN" $CERTBOT_TOOL_OPTIONS $CERTBOT_EXTRA_FLAGS || return 1
+		"$CERTBOT_TOOL" certonly --email "$CERTBOT_EMAIL" --domains "$CERTBOT_DOMAIN" $CERTBOT_TOOL_OPTIONS $CERTBOT_EXTRA_FLAGS --post-hook "$CERTBOT_CMD_HOOK_POST"
+		# --pre-hook "$CERTBOT_CMD_HOOK_PRE" --post-hook "$CERTBOT_CMD_HOOK_POST" --renew-hook "$CERTBOT_CMD_HOOK_RENEW" || return 1
 		# The first "--domains" is the base folder for certificates, and the primary key.
 		# Secondary "--domains" will be added as subjectAltName entries.
 		echo "> Configuration complete!"

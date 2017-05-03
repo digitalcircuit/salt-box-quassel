@@ -92,7 +92,7 @@ nginx.config.dummy_certs.privkey:
     - name: /etc/letsencrypt/live/{{ salt['pillar.get']('system:hostname', 'dev') }}/privkey.pem
     - source: salt://files/certbot/dummy_certs/privkey.pem
     - replace: False
-    - makedirs: True'
+    - makedirs: True
 
 # Don't try to clean these up!  Let's Encrypt may put other files in these
 # folders and automatically removing private keys is asking for trouble.
