@@ -6,6 +6,7 @@ nginx:
     # Make sure configuration is in place first, and restart if any of it changes
     - watch:
       - file: nginx.config.site
+      - file: nginx.config.confd
       - file: nginx.config.includes
       - file: nginx.config.enable
       - file: nginx.config.disable-others
@@ -26,6 +27,12 @@ nginx.config.site:
     - source: salt://files/nginx/sites/main_site
     - template: jinja
     - makedirs: True
+nginx.config.confd:
+  file.recurse:
+    - name: /etc/nginx/conf.d
+    - source: salt://files/nginx/conf.d
+    - makedirs: True
+    - clean: True
 nginx.config.includes:
   file.recurse:
     - name: /etc/nginx/includes
