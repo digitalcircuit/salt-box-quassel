@@ -21,3 +21,6 @@ add_header X-Permitted-Cross-Domain-Policies master-only;
 
 # Enable XSS protection
 add_header X-XSS-Protection "1; mode=block";
+
+# Don't share referrer on downgrade
+add_header Referrer-Policy "no-referrer-when-downgrade";
