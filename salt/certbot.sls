@@ -16,7 +16,7 @@ certbot.config.challenges:
     - mode: 750
 
 # Install Certbot itself
-# FIXME Install the PPA version for now; remove this once 0.9.3 is backported!
+# FIXME Install the PPA version for now; remove this once backported!
 certbot.ppa:
   pkgrepo.managed:
     - ppa: certbot/certbot
@@ -37,15 +37,14 @@ certbot:
 # Do before installation so any running services will be reloaded
 certbot.renewal:
   file.managed:
-    - name: /etc/letsencrypt/post-hook.d/certbot-setup-reload
+    - name: /etc/letsencrypt/renewal-hooks/deploy/certbot-setup-reload
     - source: salt://files/certbot/certbot-setup-reload
     - makedirs: True
     - template: jinja
     # Mark as executable
     - mode: 755
-    # Hooks directory is no longer created during installation
-#    - require:
-#      - pkg: certbot
+    # Hooks directory is created during first run, but this script should be
+    # ready before first run.
 
 # Get Let's Encrypt configured and set up
 # Salt doesn't seem to have a way for cmd.script's "unless" clause to be a remote script, too
@@ -69,15 +68,21 @@ certbot.configure:
       - pkg: certbot
       - file: certbot.renewal
 
-# Make sure the pre/post/renew hook scripts are set up after migrating to Let's Encrypt v0.12.0
-certbot.migrate.configure_hooks:
-  file.append:
+# --- Migrations ---
+# certbot 0.19
+# Remove old configuration hook script
+certbot.migrate.remove_old_hook_configure:
+  file.line:
     - name: "/etc/letsencrypt/renewal/{{ salt['pillar.get']('system:hostname', 'dev') }}.conf"
-    - text:
-      - "[renewalparams]"
-      - "post_hook = /bin/run-parts /etc/letsencrypt/post-hook.d/"
+    - content: "post_hook = /bin/run-parts /etc/letsencrypt/post-hook.d/"
+    - mode: delete
     - require:
       - file: certbot.configure
       - cmd: certbot.configure
+
+# Remove old renewal hook directory
+certbot.migrate.remove_old_hooks:
+  file.absent:
+    - name: /etc/letsencrypt/post-hook.d
 
 {% endif %}
