@@ -32,7 +32,9 @@ quassel.database:
 # HACK: Get the PostgreSQL configuration directory in advance so compilation doesn't fail.
 # salt['postgres.version']() -> 9.5.5, extra .5 is not wanted
 # There's probably a better way to do this.
-{%- set PG_CONF_DIR = ["/etc/postgresql/", salt['cmd.shell']('apt-cache show postgresql | grep "Depends:" | cut --delimiter="-" --field=2')]|join %}
+{%- set PG_CONF_DIR = ["/etc/postgresql/", salt['cmd.shell']('apt-cache show postgresql | grep "Depends:" | cut --delimiter="-" --field=2 | head -n 1')]|join %}
+# Sometimes 'apt-cache show' returns multiple versions; use 'head -n 1' to only get the
+# first line.
 # Before, the following was used:
 # quassel.database.tune.ID:
 # {% for PG_CONF_DIR in salt['file.find']('/etc/postgresql/', type='d', mindepth=1, maxdepth=1) %}
