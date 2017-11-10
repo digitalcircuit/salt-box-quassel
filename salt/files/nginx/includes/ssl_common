@@ -30,8 +30,11 @@ ssl_protocols TLSv1.2;
 ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256';
 ssl_prefer_server_ciphers on;
 
-# > HSTS (ngx_http_headers_module is required) (15768000 seconds = 6 months)
-add_header Strict-Transport-Security max-age=15768000;
+# > HSTS (ngx_http_headers_module is required)
+# 15768000 seconds = 6 months
+# 63072000 seconds = 2 years
+# 'always' adds to nginx internal responses, too
+add_header Strict-Transport-Security "max-age=63072000" always;
 # To disable HSTS, set max-age=0 - see:
 # https://blog.mozilla.org/security/2012/11/01/preloading-hsts/
 
