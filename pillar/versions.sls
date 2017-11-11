@@ -14,4 +14,4 @@ versions:
 # Separate from above to maintain compatibility with the saltstack formula
 node:
   ppa:
-    repository_url: https://deb.nodesource.com/node_7.x
+    repository_url: https://deb.nodesource.com/node_9.x
