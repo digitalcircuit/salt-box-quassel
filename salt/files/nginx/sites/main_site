@@ -15,10 +15,18 @@ server {
 	listen [::]:80 default_server ipv6only=on;
 
 	# Addresses this server should respond to
-	server_name localhost {{ salt['pillar.get']('system:hostname', 'dev') }};
+	# Put the default name first (for e.g. invalid Host headers)
+	server_name {{ salt['pillar.get']('system:hostname', 'dev') }} localhost;
 
 	# Redirect to HTTPS
-	return 301 https://$host$request_uri;
+	# Check for specific hosts, then fall back on $server_name
+	# See https://bjornjohansen.no/redirect-to-https-with-nginx
+	# And https://community.letsencrypt.org/t/security-issue-with-redirects-added-by-certbots-nginx-plugin/5149
+	if ($host = {{ salt['pillar.get']('system:hostname', 'dev') }}) {
+		return 301 https://$host$request_uri;
+	}
+	# Fallback
+	return 301 https://$server_name$request_uri;
 }
 
 # HTTPS
@@ -46,7 +54,8 @@ server {
 	ssl_dhparam /etc/nginx/dhparam/{{ salt['pillar.get']('system:hostname', 'dev') }}.pem;
 
 	# Addresses this server should respond to
-	server_name localhost {{ salt['pillar.get']('system:hostname', 'dev') }};
+	# Put the default name first (for e.g. invalid Host headers)
+	server_name {{ salt['pillar.get']('system:hostname', 'dev') }} localhost;
 
 	root /var/www/html_{{ salt['pillar.get']('system:hostname', 'dev') }};
 	index index.html index.htm index.php;
