@@ -6,7 +6,7 @@ versions:
   # Quassel IRC software versions
   quassel:
     # Quassel Rest Search - https://github.com/justjanne/quassel-rest-search/
-    search-git: 2.0
+    search-git: 3.0
     # Quassel Webserver - https://github.com/magne4000/quassel-webserver/
     web-git: master
 

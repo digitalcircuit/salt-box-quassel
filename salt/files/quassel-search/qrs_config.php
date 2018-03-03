@@ -1,8 +1,13 @@
 <?php
-define('db_host', 'localhost');
-define('db_port', 5432);
-define('db_name', '{{ salt['pillar.get']('quassel:database:name', 'quassel') }}');
-define('db_user', '{{ salt['pillar.get']('quassel:database:username', 'quassel') }}');
-define('db_pass', '{{ salt['pillar.get']('quassel:database:password') }}');
-define('backend', 'pgsql-smart');
-define('path_prefix', '/search');
+define('qrs_db_host', 'localhost');
+define('qrs_db_port', 5432);
+define('qrs_db_name', '{{ salt['pillar.get']('quassel:database:name', 'quassel') }}');
+// Only change this if you know what you are doing
+define('qrs_db_connector', null);
+define('qrs_db_user', '{{ salt['pillar.get']('quassel:database:username', 'quassel') }}');
+define('qrs_db_pass', '{{ salt['pillar.get']('quassel:database:password') }}');
+define('qrs_db_option_tsqueryfunction', "plainto_tsquery('english', :query)");
+// Timeout in milliseconds
+define('qrs_db_option_timeout', 5000);
+define('qrs_backend', 'pgsql-smart');
+define('qrs_path_prefix', '/search');
