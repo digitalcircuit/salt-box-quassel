@@ -12,9 +12,11 @@ quassel-search:
   # Allow modifications with the www-manage user to avoid running Git as root
   git.latest:
     - name: 'https://github.com/justjanne/quassel-rest-search.git'
-    - rev: {{ salt['pillar.get']('versions:quassel:search-git', 'HEAD') }}
     - target: /var/www/html_{{ salt['pillar.get']('system:hostname', 'dev') }}/search
     - user: www-manage
+    - rev: {{ salt['pillar.get']('versions:quassel:search:revision', 'HEAD') }}
+    - branch: {{ salt['pillar.get']('versions:quassel:search:branch', 'master') }}
+    - force_reset: True
     - require:
       - sls: 'quassel'
       - sls: 'webserver'
