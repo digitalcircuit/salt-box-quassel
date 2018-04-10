@@ -32,6 +32,7 @@ quassel-web.user-rw:
     - names:
       - /home/{{ salt['pillar.get']('quassel:web:username', 'quassel-web') }}/quassel_web_root
       - /home/{{ salt['pillar.get']('quassel:web:username', 'quassel-web') }}/.npm
+      - /home/{{ salt['pillar.get']('quassel:web:username', 'quassel-web') }}/.node-gyp
       # Git configuration
       - /home/{{ salt['pillar.get']('quassel:web:username', 'quassel-web') }}/.config
 #      # TODO - are the following needed?
@@ -59,6 +60,12 @@ quassel-web.setup.stop-for-deploy:
       - file: quassel-web.setup.configure
 
 quassel-web.setup.deploy:
+  pkg.installed:
+    # Dependencies for NodeJS package building (e.g. BufferUtil)
+    # See https://github.com/magne4000/quassel-webserver/commit/79776c7a5db163273217fb87a76c8c27bfec9a45
+    - pkgs:
+      - python
+      - build-essential
   file.recurse:
     # Runtime scripts
     - name: /home/{{ salt['pillar.get']('quassel:web:username', 'quassel-web') }}/quassel_web_root/scripts
