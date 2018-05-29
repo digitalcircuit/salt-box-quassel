@@ -87,6 +87,8 @@ quassel:
       # Reload when these files are added
       - file: quassel.config.dummy_certs.fullcert
       - file: quassel.config.dummy_certs.privkey
+      # Reload when configuration is changed
+      - file: qaussel.service.specify_certs
 
 # Get Quassel users set up
 # Salt doesn't seem to have a way for cmd.script's "unless" clause to be a remote script, too
