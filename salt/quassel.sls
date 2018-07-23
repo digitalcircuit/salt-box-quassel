@@ -1,11 +1,5 @@
 # Quassel Core, including PostgreSQL and database setup
 
-quassel.repo:
-  pkgrepo.managed:
-    - ppa: mamarley/quassel
-    - comments:
-        - 'Quassel stable PPA for Ubuntu'
-
 quassel.database:
   pkg.installed:
     # Dependencies for Postgres
@@ -68,17 +62,39 @@ qaussel.service.config:
     - source: salt://files/quassel/quasselcore-defaults
     - template: jinja
 
+# Clean up stable/beta version
+quassel.repo.channel_cleanup:
+  pkgrepo.absent:
+{% if salt['pillar.get']('versions:quassel:core:beta', False) == True %}
+    # Beta requested, disable the non-beta PPA
+    - ppa: mamarley/quassel
+{% else %}
+    # Stable requested, disable the beta PPA
+    - ppa: mamarley/quassel-beta
+{% endif %}
+
 # Install Quassel itself
 quassel:
-# FIXME Install the Git version for now; remove this once 0.13 released!
-#  pkgrepo.managed:
-#    - ppa: mamarley/quassel
+  pkgrepo.managed:
+{% if salt['pillar.get']('versions:quassel:core:beta', False) == True %}
+    # Beta requested
+    - ppa: mamarley/quassel-beta
+    - comments:
+        - 'Quassel beta PPA for Ubuntu'
+{% else %}
+    # Stable requested
+    - ppa: mamarley/quassel
+    - comments:
+        - 'Quassel stable PPA for Ubuntu'
+{% endif %}
   pkg.installed:
-#    - pkgs:
-#      - quassel-core
-#    - refresh: True
-    - sources:
-      - quassel-core: salt://files/quassel/quassel-core_git-tested_amd64.deb
+# PPA version
+    - pkgs:
+      - quassel-core
+    - refresh: True
+# Git version
+#    - sources:
+#      - quassel-core: salt://files/quassel/quassel-core_git-tested_amd64.deb
   service.running:
     - name: quasselcore
     # No need to do a full restart

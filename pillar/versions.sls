@@ -5,6 +5,9 @@
 versions:
   # Quassel IRC software versions
   quassel:
+    # Quassel itself
+    core:
+      beta: False
     # Quassel Rest Search - https://github.com/justjanne/quassel-rest-search/
     search:
       revision: 3.0
