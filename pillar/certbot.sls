@@ -1,9 +1,9 @@
 # Certificate details for Let's Encrypt
 certbot:
   # Replace dummy certificates with certificates from Let's Encrypt?
-  enable: true
+  enable: True
   # Use staging/test server to avoid rate-limit issues?
-  testing: false
+  testing: False
   # Account details
   account:
     # Email address for recovery
