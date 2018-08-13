@@ -49,14 +49,14 @@ quassel.database.tune.config:
     - makedirs: True
 
 # Manage the systemd state
-qaussel.service.specify_certs:
+quassel.service.specify_certs:
   file.managed:
     - name: /etc/systemd/system/quasselcore.service.d/letsencrypt-server-certificates.conf
     - source: salt://files/quassel/letsencrypt-server-certificates.conf
     - makedirs: True
 
 # Set up the port/logging/etc
-qaussel.service.config:
+quassel.service.config:
   file.managed:
     - name: /etc/default/quasselcore
     - source: salt://files/quassel/quasselcore-defaults
@@ -104,7 +104,7 @@ quassel:
       - file: quassel.config.dummy_certs.fullcert
       - file: quassel.config.dummy_certs.privkey
       # Reload when configuration is changed
-      - file: qaussel.service.specify_certs
+      - file: quassel.service.specify_certs
 
 # Get Quassel users set up
 # Salt doesn't seem to have a way for cmd.script's "unless" clause to be a remote script, too
