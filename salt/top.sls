@@ -8,3 +8,5 @@ base:
     - quassel-search
     - quassel-web
     - webserver
+    # Optional status reporting
+    - status/top

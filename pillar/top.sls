@@ -3,6 +3,7 @@ base:
   '*':
     - branding
     - certbot
+    - metrics
     - quassel
     - system
     - versions
