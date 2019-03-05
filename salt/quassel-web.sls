@@ -4,7 +4,7 @@
 include:
   - quassel
   - webserver
-  - common/nodejs
+  - common.nodejs
 
 # Set up the user
 quassel-web.user-basic:
@@ -110,4 +110,4 @@ quassel-web.service:
     - require:
       - sls: 'quassel'
       - sls: 'webserver'
-      - sls: 'common/nodejs'
+      - sls: 'common.nodejs'

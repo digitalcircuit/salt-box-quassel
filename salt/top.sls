@@ -2,11 +2,11 @@
 base:
   '*':
     # Activate swap first if enabled to avoid out-of-memory conditions
-    - common/swapfile
+    - common.swapfile
     - certbot
     - quassel
     - quassel-search
     - quassel-web
     - webserver
     # Optional status reporting
-    - status/top
+    - status.top

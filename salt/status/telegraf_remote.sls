@@ -3,7 +3,7 @@
 {% if salt['pillar.get']('metrics:telegraf:enabled', False) == True %}
 # See https://docs.influxdata.com/telegraf/v1.8/introduction/installation/
 include:
-  - status/influxdb_repo
+  - status.influxdb_repo
 
 # Install Telegraf
 telegraf_remote.pkg:
@@ -11,7 +11,7 @@ telegraf_remote.pkg:
     - pkgs:
       - telegraf
     - require:
-      - sls: status/influxdb_repo
+      - sls: status.influxdb_repo
 
 telegraf_remote.config.agent:
   file.managed:
