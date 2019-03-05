@@ -6,3 +6,6 @@ LOGLEVEL="Info"
 
 # The port quasselcore will listen at. Default is: 4242
 PORT="{{ salt['pillar.get']('quassel:core:port', '4242') }}"
+
+# Network address to listen on
+LISTEN="::,0.0.0.0"
