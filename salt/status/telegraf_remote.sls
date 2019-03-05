@@ -13,6 +13,15 @@ telegraf_remote.pkg:
     - require:
       - sls: status.influxdb_repo
 
+telegraf_remote.config.disable_default_output:
+  file.line:
+    - name: /etc/telegraf/telegraf.conf
+    - mode: replace
+    - content: '#[[outputs.influxdb]]'
+    - match: '.{0,2}\[\[outputs\.influxdb\]\]'
+    - require:
+      - pkg: telegraf_remote.pkg
+
 telegraf_remote.config.agent:
   file.managed:
     - name: /etc/telegraf/telegraf.d/agent.conf
@@ -110,6 +119,7 @@ telegraf_remote:
     - require:
       - pkg: telegraf_remote.pkg
     - watch:
+      - file: telegraf_remote.config.disable_default_output
       - file: telegraf_remote.config.agent
       - file: telegraf_remote.config.outputs.http
       - file: telegraf_remote.config.inputs.ping
