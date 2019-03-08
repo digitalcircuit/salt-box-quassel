@@ -1,0 +1,26 @@
+# Common Headers Configuration
+# ------------------------
+# Specify the following in any location blocks that specify headers
+	## [Common Headers Configuration]
+	#include includes/headers_common;
+	#
+
+## See also: ssl_common
+#add_header Strict-Transport-Security "max-age=63072000" always;
+
+# Avoid MIME-type sniffing
+# See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
+add_header X-Content-Type-Options nosniff always;
+
+# Avoid clickjacking attacks
+# See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
+add_header X-Frame-Options SAMEORIGIN always;
+
+# Enable Cross-Domain policies only from the server root
+add_header X-Permitted-Cross-Domain-Policies master-only always;
+
+# Enable XSS protection
+add_header X-XSS-Protection "1; mode=block" always;
+
+# Don't share referrer on downgrade, minimize it on different domains
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;

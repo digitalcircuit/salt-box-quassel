@@ -63,6 +63,9 @@ server {
 	# [Common Configuration]
 	include includes/conf_common;
 
+	# [Exclude Indexing Configuration]
+	include includes/exclude_indexing;
+
 	# [Error Pages]
 	include includes/errors_common;
 

@@ -1,2 +1,4 @@
-User-agent: *
-Disallow: /
+# Disallowed via X-Robots-Tag headers
+#
+#User-agent: *
+#Disallow: /
