@@ -20,8 +20,8 @@ system_swap:
     - name: /swapfile
     - persist: true
 {% else %}
-  # Disable swap
-  mount.swapoff:
-    - name: /swapfile
+  ## Disable swap - no longer supported
+  #mount.swapoff:
+  #  - name: /swapfile
   # Remove swap.. somehow?
 {% endif %}
