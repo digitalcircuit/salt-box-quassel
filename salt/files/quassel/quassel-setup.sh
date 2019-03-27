@@ -1,4 +1,7 @@
 #!/bin/bash
+# See http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -euo pipefail
+
 # Check if running before updating; if so, don't allow update
 QUASSEL_SERVICE_NAME="quasselcore.service"
 
@@ -128,12 +131,68 @@ if [ $# -ge $EXPECTED_ARGS ]; then
 				exit 1
 			fi
 			;;
+		"configure_from_file" )
+			EXPECTED_ARGS=2 # 1 + 1
+			if [ $# -eq $EXPECTED_ARGS ]; then
+				QUASSEL_SETUP_FILE="$2"
+				if [ ! -f "$QUASSEL_SETUP_FILE" ]; then
+					echo "Quassel setup file '$QUASSEL_SETUP_FILE' does not exist" >&2
+					exit 1
+				fi
+				# Load blank defaults
+				QUASSEL_PSQL_USER_NAME=""
+				QUASSEL_PSQL_USER_PASSWORD=""
+				QUASSEL_PSQL_HOSTNAME=""
+				QUASSEL_PSQL_PORT=""
+				QUASSEL_PSQL_DB_NAME=""
+				QUASSEL_ADMIN_USER_NAME=""
+				QUASSEL_ADMIN_USER_PASSWORD=""
+				# Load setup file
+				source "$QUASSEL_SETUP_FILE"
+				# Validate variables
+				if [ -z "$QUASSEL_PSQL_USER_NAME" ]; then
+					echo "QUASSEL_PSQL_USER_NAME not found in Quassel setup file '$QUASSEL_SETUP_FILE'" >&2
+					exit 1
+				fi
+				if [ -z "$QUASSEL_PSQL_USER_PASSWORD" ]; then
+					echo "QUASSEL_PSQL_USER_PASSWORD not found in Quassel setup file '$QUASSEL_SETUP_FILE'" >&2
+					exit 1
+				fi
+				if [ -z "$QUASSEL_PSQL_HOSTNAME" ]; then
+					echo "QUASSEL_PSQL_HOSTNAME not found in Quassel setup file '$QUASSEL_SETUP_FILE'" >&2
+					exit 1
+				fi
+				if [ -z "$QUASSEL_PSQL_PORT" ]; then
+					echo "QUASSEL_PSQL_PORT not found in Quassel setup file '$QUASSEL_SETUP_FILE'" >&2
+					exit 1
+				fi
+				if [ -z "$QUASSEL_PSQL_DB_NAME" ]; then
+					echo "QUASSEL_PSQL_DB_NAME not found in Quassel setup file '$QUASSEL_SETUP_FILE'" >&2
+					exit 1
+				fi
+				if [ -z "$QUASSEL_ADMIN_USER_NAME" ]; then
+					echo "QUASSEL_ADMIN_USER_NAME not found in Quassel setup file '$QUASSEL_SETUP_FILE'" >&2
+					exit 1
+				fi
+				if [ -z "$QUASSEL_ADMIN_USER_PASSWORD" ]; then
+					echo "QUASSEL_ADMIN_USER_PASSWORD not found in Quassel setup file '$QUASSEL_SETUP_FILE'" >&2
+					exit 1
+				fi
+				# Configure
+				quassel_configure "$QUASSEL_PSQL_USER_NAME" "$QUASSEL_PSQL_USER_PASSWORD" "$QUASSEL_PSQL_HOSTNAME" "$QUASSEL_PSQL_PORT" "$QUASSEL_PSQL_DB_NAME" "$QUASSEL_ADMIN_USER_NAME" "$QUASSEL_ADMIN_USER_PASSWORD"
+				# Return the status code
+				exit $?
+			else
+				echo "Usage: `basename $0` configure_from_file {path to file containing configuration variables - CAUTION: file must be trusted, any script inside will be run!}" >&2
+				exit 1
+			fi
+			;;
 		* )
-			echo "Usage: `basename $0` {command: check, configure}" >&2
+			echo "Usage: `basename $0` {command: check, configure, configure_from_file}" >&2
 			exit 1
 			;;
 	esac
 else
-	echo "Usage: `basename $0` {command: check, configure}" >&2
+	echo "Usage: `basename $0` {command: check, configure, configure_from_file}" >&2
 	exit 1
 fi

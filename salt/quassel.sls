@@ -48,18 +48,19 @@ quassel.database.tune.config:
     - template: jinja
     - makedirs: True
 
-# Manage the systemd state
-quassel.service.specify_certs:
-  file.managed:
-    - name: /etc/systemd/system/quasselcore.service.d/letsencrypt-server-certificates.conf
-    - source: salt://files/quassel/letsencrypt-server-certificates.conf
-    - makedirs: True
-
-# Set up the port/logging/etc
-quassel.service.config:
+# Set up backend connection information
+quassel.service.config.defaults:
   file.managed:
     - name: /etc/default/quasselcore
     - source: salt://files/quassel/quasselcore-defaults
+    - template: jinja
+
+# Manage the systemd state
+quassel.service.config.exec:
+  file.managed:
+    - name: /etc/systemd/system/quasselcore.service.d/quasselcore-exec-config.conf
+    - source: salt://files/quassel/quasselcore-exec-config.conf
+    - makedirs: True
     - template: jinja
 
 # Clean up stable/beta version
@@ -97,14 +98,24 @@ quassel:
 #      - quassel-core: salt://files/quassel/quassel-core_git-tested_amd64.deb
   service.running:
     - name: quasselcore
-    # No need to do a full restart
-    - reload: True
+    # No need to do a full restart for certs, but needed for configuration
+    # changes.  Just always restart, for simplicity.
+    - reload: False
     - watch:
       # Reload when these files are added
       - file: quassel.config.dummy_certs.fullcert
       - file: quassel.config.dummy_certs.privkey
       # Reload when configuration is changed
-      - file: quassel.service.specify_certs
+      - file: quassel.service.config.exec
+      - file: quassel.service.config.defaults
+
+# Store configuration information for setting up Quassel
+quassel.configure.vars:
+  file.managed:
+    - name: /root/salt/quassel/quassel-setup-vars.sh
+    - source: salt://files/quassel/quassel-setup-vars.sh
+    - makedirs: True
+    - template: jinja
 
 # Get Quassel users set up
 # Salt doesn't seem to have a way for cmd.script's "unless" clause to be a remote script, too
@@ -117,11 +128,15 @@ quassel.configure:
     - mode: 755
   cmd.run:
     # Configure the Quassel core to use the Postgres database
-    - name: /root/salt/quassel/quassel-setup.sh configure "{{ salt['pillar.get']('quassel:database:username', 'quassel') }}" "{{ salt['pillar.get']('quassel:database:password') }}" "localhost" "5432" "{{ salt['pillar.get']('quassel:database:name', 'quassel') }}" "{{ salt['pillar.get']('quassel:core:admin:username') }}" "{{ salt['pillar.get']('quassel:core:admin:password') }}"
+    - name: /root/salt/quassel/quassel-setup.sh configure_from_file "/root/salt/quassel/quassel-setup-vars.sh"
+      # configure "{{ salt['pillar.get']('quassel:database:username', 'quassel') }}" "{{ salt['pillar.get']('quassel:database:password') }}" "localhost" "5432" "{{ salt['pillar.get']('quassel:database:name', 'quassel') }}" "{{ salt['pillar.get']('quassel:core:admin:username') }}" "{{ salt['pillar.get']('quassel:core:admin:password') }}"
       # {PSQL user name} {PSQL user password} {PSQL hostname} {PSQL port} {PSQL database name} {Quassel admin user name} {Quassel admin user password}
 #    - source: salt://files/quassel/quassel-setup.sh
     # Ignore if storage settings already configured
     - unless: /root/salt/quassel/quassel-setup.sh check
+    - watch:
+      # Recheck when configuration changes
+      - file: quassel.configure.vars
 
 # ---
 # Ensure there's some form of SSL certificate in place
@@ -139,3 +154,10 @@ quassel.config.dummy_certs.privkey:
     - source: salt://files/certbot/dummy_certs/privkey.pem
     - replace: False
 # ---
+
+# --- Migrations ---
+# Renaming files to better indicate purpose
+# Remove old Let's Encrypt service override script
+quassel.service.specify_certs:
+  file.absent:
+    - name: /etc/systemd/system/quasselcore.service.d/letsencrypt-server-certificates.conf
