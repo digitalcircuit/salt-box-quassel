@@ -37,6 +37,8 @@ nginx.config.includes:
   file.recurse:
     - name: /etc/nginx/includes
     - source: salt://files/nginx/includes
+    # Templating is needed for php_handler
+    - template: jinja
     - makedirs: True
     - clean: True
 nginx.config.enable:
@@ -156,8 +158,9 @@ www-data.main.style:
 web-php:
   pkg.installed:
     - pkgs:
-      - php7.0-fpm
-      - php7.0-pgsql
+      # From php7
+      - php-fpm
+      - php-pgsql
     - require_in:
       - service: nginx
       # Don't run the web-server until PHP is installed
