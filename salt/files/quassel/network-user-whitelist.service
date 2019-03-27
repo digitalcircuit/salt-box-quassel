@@ -1,0 +1,21 @@
+# systemd unit file for network-user-whitelist
+# Based on:  https://bbs.archlinux.org/viewtopic.php?id=148170
+# And: https://blog.hqcodeshop.fi/archives/93-Handling-varrun-with-systemd.html
+[Unit]
+Description=Quassel IRC network access whitelisting
+After=local-fs.target network.target
+
+[Service]
+Type=oneshot
+# Need to do cleanup, too
+RemainAfterExit=yes
+SyslogIdentifier=network-user-whitelist
+# Startup
+ExecStart=/root/salt/quassel/network-user-whitelist-configure.sh enable
+# Refresh
+ExecReload=/root/salt/quassel/network-user-whitelist-configure.sh refresh
+# Clean up iptables rules, including after failures
+ExecStopPost=/root/salt/quassel/network-user-whitelist-configure.sh disable
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+# systemd unit file for network-user-whitelist-refresh
+# Based on:  https://bbs.archlinux.org/viewtopic.php?id=148170
+# And: https://blog.hqcodeshop.fi/archives/93-Handling-varrun-with-systemd.html
+[Unit]
+Description=Refresh user network whitelisting
+Requires=network-user-whitelist.service
+After=network-user-whitelist.service
+
+[Service]
+Type=oneshot
+# Refresh the network-user-whitelist service
+ExecStart=/bin/systemctl reload network-user-whitelist.service
+
+[Install]
+WantedBy=multi-user.target

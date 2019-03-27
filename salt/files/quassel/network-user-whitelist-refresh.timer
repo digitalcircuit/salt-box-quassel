@@ -1,0 +1,12 @@
+# Part of network-user-whitelist.service
+# See https://wiki.archlinux.org/index.php/Systemd/Timers
+[Unit]
+Description=Refresh user network whitelisting
+
+[Timer]
+# OnBoot handles first start, UnitActive handles subsequent
+OnBootSec=15min
+OnUnitActiveSec=1h
+
+[Install]
+WantedBy=timers.target

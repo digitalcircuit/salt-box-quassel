@@ -155,6 +155,99 @@ quassel.config.dummy_certs.privkey:
     - replace: False
 # ---
 
+# Apply lockdown policies
+{% if salt['pillar.get']('quassel:lockdown:strict-networks:enabled', False) == True %}
+# ####
+# Network lockdown enabled, setup
+quassel.netlockdown.program.vars:
+  # Programs
+  file.managed:
+    - name: /root/salt/quassel/network-user-whitelist-vars.sh
+    - source: salt://files/quassel/network-user-whitelist-vars.sh
+    - makedirs: True
+    # Apply pillar configuration
+    - template: jinja
+quassel.netlockdown.program.script:
+  file.managed:
+    - name: /root/salt/quassel/network-user-whitelist-configure.sh
+    - source: salt://files/quassel/network-user-whitelist-configure.sh
+    - makedirs: True
+    # Mark as executable
+    - mode: 755
+quassel.netlockdown.service.unit:
+  # Unit for startup
+  file.managed:
+    - name: /etc/systemd/system/network-user-whitelist.service
+    - source: salt://files/quassel/network-user-whitelist.service
+  cmd.run:
+    - name: systemctl --system daemon-reload
+    - onchanges:
+      - file: quassel.netlockdown.service.unit
+quassel.netlockdown.service.running:
+  # Enable startup
+  service.running:
+    - name: network-user-whitelist
+    - enable: True
+    - require:
+      - cmd: quassel.netlockdown.service.unit
+    - watch:
+      - file: quassel.netlockdown.program.vars
+      - file: quassel.netlockdown.program.script
+      - file: quassel.netlockdown.service.unit
+quassel.netlockdown.refresh.service.unit:
+  # Unit for startup
+  file.managed:
+    - name: /etc/systemd/system/network-user-whitelist-refresh.service
+    - source: salt://files/quassel/network-user-whitelist-refresh.service
+  cmd.run:
+    - name: systemctl --system daemon-reload
+    - onchanges:
+      - file: quassel.netlockdown.refresh.service.unit
+quassel.netlockdown.refresh.service.running:
+  # Enable startup
+  service.enabled:
+    - name: network-user-whitelist-refresh
+    - require:
+      - cmd: quassel.netlockdown.refresh.service.unit
+      - service: quassel.netlockdown.service.running
+    - watch:
+      - file: quassel.netlockdown.refresh.service.unit
+quassel.netlockdown.refresh.timer.unit:
+  # Unit for periodic refresh
+  file.managed:
+    - name: /etc/systemd/system/network-user-whitelist-refresh.timer
+    - source: salt://files/quassel/network-user-whitelist-refresh.timer
+  cmd.run:
+    - name: systemctl --system daemon-reload
+    - onchanges:
+      - file: quassel.netlockdown.refresh.timer.unit
+quassel.netlockdown.refresh.timer.running:
+  # Enable periodic refresh
+  service.running:
+    - name: network-user-whitelist-refresh.timer
+    - enable: True
+    - require:
+      - cmd: quassel.netlockdown.refresh.timer.unit
+    - watch:
+      - file: quassel.netlockdown.refresh.timer.unit
+{% else %}
+# ####
+# Network lockdown disabled, clean up
+# This *should* disable the rules
+quassel.netlockdown.cleanup.service:
+  service.dead:
+    - name: network-user-whitelist
+    - enable: False
+quassel.netlockdown.cleanup.refresh.timer:
+  service.dead:
+    - name: network-user-whitelist-refresh.timer
+    - enable: False
+quassel.netlockdown.refresh.service.running:
+  # Enable startup
+  service.disabled:
+    - name: network-user-whitelist-refresh
+{% endif %}
+
 # --- Migrations ---
 # Renaming files to better indicate purpose
 # Remove old Let's Encrypt service override script
