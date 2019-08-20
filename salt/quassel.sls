@@ -108,6 +108,8 @@ quassel:
       # Reload when configuration is changed
       - file: quassel.service.config.exec
       - file: quassel.service.config.defaults
+      # Reload when package changes
+      - pkg: quassel
 
 # Store configuration information for setting up Quassel
 quassel.configure.vars:
