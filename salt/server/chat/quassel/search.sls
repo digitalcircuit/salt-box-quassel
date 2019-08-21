@@ -1,9 +1,8 @@
 # Quassel Search
 
-# Require Quassel and webserver to be installed first
+# Require Quassel to be installed first
 include:
   - .core
-  - webserver
 
 server.chat.quassel.search:
   file.directory:
@@ -19,7 +18,6 @@ server.chat.quassel.search:
     - force_reset: True
     - require:
       - sls: 'server.chat.quassel.core'
-      - sls: 'webserver'
 
 server.chat.quassel.search.config:
   file.managed:

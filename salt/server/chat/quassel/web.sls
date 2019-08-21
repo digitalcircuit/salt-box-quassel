@@ -6,10 +6,9 @@
 {% set qweb_repo_parent_dir = qweb_work_dir | path_join('qweb') %}
 {% set qweb_repo_dir = qweb_repo_parent_dir | path_join('quassel-webserver') %}
 
-# Require Quassel and webserver to be installed first
+# Require Quassel and NodeJS to be installed first
 include:
   - .core
-  - webserver
   - common.nodejs
 
 # Set up the user
