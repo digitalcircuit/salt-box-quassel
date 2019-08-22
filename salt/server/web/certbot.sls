@@ -38,7 +38,7 @@ certbot:
 certbot.renewal:
   file.managed:
     - name: /etc/letsencrypt/renewal-hooks/deploy/certbot-setup-reload
-    - source: salt://files/certbot/certbot-setup-reload
+    - source: salt://files/server/certbot/certbot-setup-reload
     - makedirs: True
     - template: jinja
     # Mark as executable
@@ -51,7 +51,7 @@ certbot.renewal:
 certbot.configure:
   file.managed:
     - name: /root/salt/certbot/certbot-setup.sh
-    - source: salt://files/certbot/certbot-setup.sh
+    - source: salt://files/server/certbot/certbot-setup.sh
     - makedirs: True
     # Mark as executable
     - mode: 755
@@ -59,7 +59,7 @@ certbot.configure:
     # Configure Certbot to acquire the certificates for the first time
     - name: /root/salt/certbot/certbot-setup.sh configure "{{ salt['pillar.get']('system:hostname', 'dev') }}" "{{ salt['pillar.get']('certbot:testing', 'false') }}" "{{ salt['pillar.get']('certbot:account:email') }}"
       # {system hostname} {testing mode - true/false} {account recovery email}
-#    - source: salt://files/certbot/certbot-setup.sh
+#    - source: salt://files/server/certbot/certbot-setup.sh
     # Ignore if certbot already configured
     - unless: /root/salt/certbot/certbot-setup.sh check "{{ salt['pillar.get']('system:hostname', 'dev') }}"
     - require:

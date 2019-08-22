@@ -133,12 +133,12 @@ server.chat.quassel.core.configure:
 server.chat.quassel.core.config.dummy_certs.fullcert:
   file.managed:
     - name: /var/lib/quassel/le-fullchain.pem
-    - source: salt://files/certbot/dummy_certs/cert.pem
+    - source: salt://files/server/certbot/dummy_certs/cert.pem
     - replace: False
 server.chat.quassel.core.config.dummy_certs.privkey:
   file.managed:
     - name: /var/lib/quassel/le-privkey.pem
-    - source: salt://files/certbot/dummy_certs/privkey.pem
+    - source: salt://files/server/certbot/dummy_certs/privkey.pem
     - replace: False
 # ---
 

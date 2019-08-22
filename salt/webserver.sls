@@ -87,19 +87,19 @@ nginx.config.dummy_certs.marker:
 nginx.config.dummy_certs.cert:
   file.managed:
     - name: /etc/letsencrypt/live/{{ salt['pillar.get']('system:hostname', 'dev') }}/chain.pem
-    - source: salt://files/certbot/dummy_certs/cert.pem
+    - source: salt://files/server/certbot/dummy_certs/cert.pem
     - replace: False
     - makedirs: True
 nginx.config.dummy_certs.fullcert:
   file.managed:
     - name: /etc/letsencrypt/live/{{ salt['pillar.get']('system:hostname', 'dev') }}/fullchain.pem
-    - source: salt://files/certbot/dummy_certs/cert.pem
+    - source: salt://files/server/certbot/dummy_certs/cert.pem
     - replace: False
     - makedirs: True
 nginx.config.dummy_certs.privkey:
   file.managed:
     - name: /etc/letsencrypt/live/{{ salt['pillar.get']('system:hostname', 'dev') }}/privkey.pem
-    - source: salt://files/certbot/dummy_certs/privkey.pem
+    - source: salt://files/server/certbot/dummy_certs/privkey.pem
     - replace: False
     - makedirs: True
 
