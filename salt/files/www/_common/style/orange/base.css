@@ -25,12 +25,38 @@ code {
 	border-radius: 3px;
 }
 
+/* Responsive wrapper */
 div#wrap {
 	margin-left: auto;
 	margin-right: auto;
-	max-width: 50em;
+	/* Original: max-width: 50em;*/
 	padding: 1.5em;
+	/* Fallback */
+	width: 100%;
+	/* Goal - include background a bit */
+	width: calc(100% - 0.5em);
 }
+
+@media only screen and (max-width: 50em) {
+	div#wrap {
+		padding: 0.25em;
+	}
+}
+
+@media only screen and (max-width: 70em) and (min-width: 50.001em) {
+	div#wrap {
+		width: 46em;
+		/* Subtract padding, 50em - 1.5em * 2, then -1em for some reason */
+	}
+}
+
+@media only screen and (min-width: 70em) {
+	div#wrap {
+		width: calc(85% - 12em);
+		max-width: 60em;
+	}
+}
+/* End wrapper */
 
 div.subtext {
 	padding-left: 0.5em;
@@ -41,6 +67,12 @@ img.img_embed {
 	max-width: 90%;
 	margin-left: auto;
 	margin-right: auto;
+	display: block;
+	padding-bottom: 1em;
+}
+
+img.img_thumb {
+	max-height: 10em;
 	display: block;
 	padding-bottom: 1em;
 }
@@ -57,6 +89,14 @@ img.img_link_icon {
 img.img_link_icon_small {
 	width: 2em;
 	height: 2em;
+}
+
+ol.list_toc_section {
+	padding-top: 0.5em;
+}
+
+li {
+	padding-bottom: 0.5em;
 }
 
 ul.list_simple {
