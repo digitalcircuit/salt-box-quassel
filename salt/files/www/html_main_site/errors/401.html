@@ -20,9 +20,9 @@
 	<h2><a name="header">Error 401 - authorization required</a></h2>
 	<h3><a name="header_sub">Try <a href=".">again</a>, or go to <a href="/">the homepage</a>?</a></h3>
 	<p>Unfortunately, you're not allowed access to this page without providing a valid identification.</p>
-{% if salt['pillar.get']('display:errors:show_contact', False) == True -%}
+{% if salt['pillar.get']('server:chat:quassel:branding:errors:show_contact', False) == True -%}
 	<br>
-	<p><em>If you're pretty sure this is a mistake, {{ salt['pillar.get']('display:errors:contact_prompt', "send me a message") }}.</em></p>
+	<p><em>If you're pretty sure this is a mistake, {{ salt['pillar.get']('server:chat:quassel:branding:errors:contact_prompt', "send me a message") }}.</em></p>
 {%- endif %}
 </div>
 </body>

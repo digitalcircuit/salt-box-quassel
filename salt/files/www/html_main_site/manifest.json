@@ -1,5 +1,5 @@
 {
-	"name": "{{ salt['pillar.get']('display:name', 'Quassel Hosted') }}",
+	"name": "{{ salt['pillar.get']('server:chat:quassel:branding:name', 'Quassel Hosted') }}",
 	"icons": [
 		{
 			"src": "\/android-chrome-192x192.png",

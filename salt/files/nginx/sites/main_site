@@ -5,7 +5,7 @@ upstream quassel-web {
 	#server http://127.0.0.1:64080
 
 	# Socket based:
-	server unix:{{ salt['pillar.get']('quassel:web:socket_dir', '/var/run/quassel-web') }}/quassel-web.sock;
+	server unix:{{ salt['pillar.get']('server:chat:quassel:web:socket_dir', '/var/run/quassel-web') }}/quassel-web.sock;
 }
 
 # HTTP

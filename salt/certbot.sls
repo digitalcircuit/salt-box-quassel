@@ -3,7 +3,7 @@
 {% if salt['pillar.get']('certbot:enable', False) == True %}
 # Require quassel and webserver to be installed first
 include:
-  - quassel
+  - server.chat.quassel.core
   - webserver
 
 # Ensure Let's Encrypt challenges directory exists
@@ -63,7 +63,7 @@ certbot.configure:
     # Ignore if certbot already configured
     - unless: /root/salt/certbot/certbot-setup.sh check "{{ salt['pillar.get']('system:hostname', 'dev') }}"
     - require:
-      - sls: 'quassel'
+      - sls: 'server.chat.quassel.core'
       - sls: 'webserver'
       - pkg: certbot
       - file: certbot.renewal

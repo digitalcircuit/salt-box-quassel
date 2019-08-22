@@ -1,9 +1,8 @@
 # Apply to all (since we only have one machine)
 base:
   '*':
-    - branding
     - certbot
-    - metrics
-    - quassel
+    - server.chat.quassel.top
+    - server.metrics
+    - server.storage.database
     - system
-    - versions

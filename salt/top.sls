@@ -4,9 +4,8 @@ base:
     # Activate swap first if enabled to avoid out-of-memory conditions
     - common.swapfile
     - certbot
-    - quassel
-    - quassel-search
-    - quassel-web
     - webserver
+    # Full Quassel install
+    - server.chat.quassel.top
     # Optional status reporting
-    - status.top
+    - server.metrics.top

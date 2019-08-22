@@ -20,9 +20,9 @@
 	<h2><a name="header">Error 403 - access denied</a></h2>
 	<h3><a name="header_sub">Try <a href="/">the homepage</a>?</a></h3>
 	<p>Unfortunately, you're not allowed access to this page.</p>
-{% if salt['pillar.get']('display:errors:show_contact', False) == True -%}
+{% if salt['pillar.get']('server:chat:quassel:branding:errors:show_contact', False) == True -%}
 	<br>
-	<p><em>If you're pretty sure you should be allowed access, {{ salt['pillar.get']('display:errors:contact_prompt', "send me a message") }}.</em></p>
+	<p><em>If you're pretty sure you should be allowed access, {{ salt['pillar.get']('server:chat:quassel:branding:errors:contact_prompt', "send me a message") }}.</em></p>
 {%- endif %}
 </div>
 </body>
