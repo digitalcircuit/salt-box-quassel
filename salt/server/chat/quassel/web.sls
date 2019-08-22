@@ -50,7 +50,7 @@ server.chat.quassel.web.user-rw:
 # made.  It'll be started back up by the later service check.
 server.chat.quassel.web.setup.stop-for-deploy:
   service.dead:
-    - name: quassel-web.service
+    - name: quassel-web
     # Only stop if changes are going to be made
     - prereq:
       # Stop service before making changes
@@ -130,7 +130,7 @@ server.chat.quassel.web.service.unit:
 
 server.chat.quassel.web.service:
   service.running:
-    - name: quassel-web.service
+    - name: quassel-web
     - enable: True
     - watch:
       # Restart service on changes, wait for service to be deployed before start
