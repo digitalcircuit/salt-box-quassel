@@ -93,8 +93,8 @@ server.chat.quassel.web.repo:
 
 server.chat.quassel.web.repo.build.npm:
   cmd.run:
-    # Run install if new, upgrade if existing
-    - name: npm install --production && npm prune
+    # Run install, not updating the package-lock.json file, then prune afterwards
+    - name: npm install --production --no-package-lock && npm prune
     - cwd: {{ qweb_repo_dir }}
     - runas: {{ qweb_user }}
     # Recompile on changes
