@@ -4,14 +4,26 @@
 include:
   - .core
 
+# Joining strings with "~"
+# See https://stackoverflow.com/questions/2061439/string-concatenation-in-jinja/
+{% set qsearch_html_dir = '/var/www/html_' ~ salt['pillar.get']('system:hostname', 'dev') %}
+
+# Make sure the parent directory exists
+server.chat.quassel.search.parentdir:
+  file.directory:
+    - name: {{ qsearch_html_dir }}
+    - makedirs: True
+
 server.chat.quassel.search:
   file.directory:
-    - name: /var/www/html_{{ salt['pillar.get']('system:hostname', 'dev') }}/search
+    - name: {{ qsearch_html_dir }}/search
     - user: www-manage
+    - require:
+      - file: server.chat.quassel.search.parentdir
   # Allow modifications with the www-manage user to avoid running Git as root
   git.latest:
     - name: 'https://github.com/justjanne/quassel-rest-search.git'
-    - target: /var/www/html_{{ salt['pillar.get']('system:hostname', 'dev') }}/search
+    - target: {{ qsearch_html_dir }}/search
     - user: www-manage
     - rev: {{ salt['pillar.get']('versions:quassel:search:revision', 'HEAD') }}
     - branch: {{ salt['pillar.get']('versions:quassel:search:branch', 'master') }}
@@ -21,7 +33,7 @@ server.chat.quassel.search:
 
 server.chat.quassel.search.config:
   file.managed:
-    - name: /var/www/html_{{ salt['pillar.get']('system:hostname', 'dev') }}/search/qrs_config.php
+    - name: {{ qsearch_html_dir }}/search/qrs_config.php
     - source: salt://files/server/chat/quassel/search/qrs_config.php
     - user: www-manage
     - group: www-data
