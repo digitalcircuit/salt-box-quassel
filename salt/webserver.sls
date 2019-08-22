@@ -141,8 +141,8 @@ www-data.main.error:
     - clean: True
 www-data.main.manifest:
   file.managed:
-    - name: /var/www/html_{{ salt['pillar.get']('system:hostname', 'dev') }}/manifest.json
-    - source: salt://files/www/html_main_site/manifest.json
+    - name: /var/www/html_{{ salt['pillar.get']('system:hostname', 'dev') }}/site.webmanifest
+    - source: salt://files/www/html_main_site/site.webmanifest
     - template: jinja
 www-data.main.robots:
   file.managed:

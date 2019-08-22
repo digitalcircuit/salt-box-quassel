@@ -1,0 +1,18 @@
+{
+    "name": "{{ salt['pillar.get']('server:chat:quassel:branding:name', 'Hosted Quassel Chat') }}",
+    "short_name": "{{ salt['pillar.get']('server:chat:quassel:branding:name', 'Hosted Quassel Chat') }}",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#1969cb",
+    "background_color": "#ffffff"
+}
