@@ -1,8 +1,9 @@
 # Apply to all (since we only have one machine)
 base:
   '*':
-    - certbot
     - server.chat.quassel.top
+    - server.hostnames
     - server.metrics
     - server.storage.database
-    - system
+    - server.system
+    - server.web.certbot

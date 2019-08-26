@@ -3,9 +3,11 @@ base:
   '*':
     # Activate swap first if enabled to avoid out-of-memory conditions
     - common.swapfile
-    - webserver
     # Full Quassel install
     - server.chat.quassel.top
     # Optional status reporting
     - server.metrics.top
+    # Certbot
     - server.web.certbot
+    # Website
+    - server.web.main

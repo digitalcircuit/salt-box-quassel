@@ -1,12 +1,12 @@
 # Quassel Search
 
 # Require Quassel to be installed first
+# Also require webserver for 'www-manage' user
 include:
   - .core
+  - server.web.webserver
 
-# Joining strings with "~"
-# See https://stackoverflow.com/questions/2061439/string-concatenation-in-jinja/
-{% set qsearch_html_dir = '/var/www/html_' ~ salt['pillar.get']('system:hostname', 'dev') %}
+{% set qsearch_html_dir = '/var/www/main/html' %}
 
 # Make sure the parent directory exists
 server.chat.quassel.search.parentdir:
@@ -20,6 +20,8 @@ server.chat.quassel.search:
     - user: www-manage
     - require:
       - file: server.chat.quassel.search.parentdir
+    - require:
+      - user: www-data-manager
   # Allow modifications with the www-manage user to avoid running Git as root
   git.latest:
     - name: 'https://github.com/justjanne/quassel-rest-search.git'
@@ -30,6 +32,7 @@ server.chat.quassel.search:
     - force_reset: True
     - require:
       - sls: 'server.chat.quassel.core'
+      - user: www-data-manager
 
 server.chat.quassel.search.config:
   file.managed:

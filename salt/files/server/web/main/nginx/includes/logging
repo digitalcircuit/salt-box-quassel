@@ -1,0 +1,20 @@
+# main Logging Configuration
+# ------------------------
+# Specify the following in the server configuration file within the main server block
+	## [main Logging Configuration]
+	#include includes/main/logging;
+	#
+
+# [Default Logging Configuration]
+include includes/common/logging/default;
+
+# Conditionally log access, reducing clutter
+# See https://www.nginx.com/resources/admin-guide/logging-and-monitoring/#conditional
+# And https://gist.github.com/jrom/1760790
+
+# [!] Depends on conf.d/logging-auto-watch.conf
+# That file must be included within the HTTP block.
+
+# Domain-separated logging
+access_log /var/log/nginx/domain_{{ salt['pillar.get']('server:hostnames:cert-primary:root') }}.access.log combined;
+error_log /var/log/nginx/domain_{{ salt['pillar.get']('server:hostnames:cert-primary:root') }}.error.log;

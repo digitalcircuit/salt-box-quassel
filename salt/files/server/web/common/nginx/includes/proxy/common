@@ -1,0 +1,14 @@
+# Proxy headers for all proxies
+# ------------------------
+# Specify the following in the proxy_pass block of the app-specific location files
+	## [Proxy headers for all proxies]
+	#include includes/common/proxy/common;
+
+# Pass the original connection information
+proxy_set_header Host              $host;
+proxy_set_header X-Real-IP         $remote_addr;
+proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+proxy_set_header X-Forwarded-Host  $server_name;
+proxy_set_header X-Forwarded-Proto $scheme;
+
+# Don't add headers without re-including all needed headers

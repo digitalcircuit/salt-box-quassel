@@ -1,0 +1,15 @@
+# Quassel Web - Upstream
+# ------------------------
+# Specify the following in the server configuration file outside of the server block
+	## [Quassel Web - Upstream]
+	#include includes/main/proxy/local/app/quassel-web/upstream;
+
+# Quassel Web proxying configuration
+
+# Proxy upstream
+# ----
+
+upstream local-app-quassel-web {
+	# Quassel Web local listener
+	server unix:{{ salt['pillar.get']('server:chat:quassel:web:socket_dir', '/var/run/quassel-web') }}/quassel-web.sock;
+}

@@ -73,6 +73,11 @@ server.chat.quassel.core:
 # Git version
 #    - sources:
 #      - quassel-core: salt://files/server/chat/quassel/core/quassel-core_git-tested_amd64.deb
+{% if salt['pillar.get']('certbot:enable', False) == True %}
+    # Make sure packages/users are present before first cert deploy
+    - require_in:
+      - cmd: certbot.configure
+{% endif %}
   service.running:
     - name: quasselcore
     # No need to do a full restart for certs, but needed for configuration
@@ -91,6 +96,19 @@ server.chat.quassel.core:
       - file: server.chat.quassel.core.service.config.defaults
       # Reload when package changes
       - pkg: server.chat.quassel.core
+
+# Set up deploy hook to reload on changes
+{% if salt['pillar.get']('certbot:enable', False) == True %}
+server.chat.quassel.core.config.certbot:
+  file.managed:
+    - name: /root/salt/certbot/cert/cert-primary/renewal-hooks-deploy/quassel-reload
+    - source: salt://files/server/chat/quassel/core/quassel-reload
+    - makedirs: True
+    # Mark as executable
+    - mode: 755
+    - watch_in:
+      - cmd: certbot.configure
+{% endif %}
 
 # Store configuration information for setting up Quassel
 server.chat.quassel.core.configure.vars:

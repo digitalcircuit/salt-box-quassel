@@ -1,0 +1,19 @@
+# main Domain Configuration
+# ------------------------
+# Specify the following in the server configuration file within the main server block
+	## [main Domain Configuration]
+	#include includes/main/domain/main;
+	#
+
+# [SSL Configuration]
+include includes/common/ssl_common;
+# > Certs sent to the client in SERVER HELLO are concatenated in ssl_certificate
+ssl_certificate /etc/letsencrypt/live/cert-primary/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/cert-primary/privkey.pem;
+#
+# > Verify chain of trust of OCSP response using Root CA and Intermediate certs
+ssl_trusted_certificate /etc/letsencrypt/live/cert-primary/chain.pem;
+#
+# > Diffie-Hellman parameter for DHE ciphersuites, recommended 2048 bits
+# (Generate with: openssl dhparam -out /etc/nginx/dhparam/cert-primary.pem 2048
+ssl_dhparam /etc/nginx/dhparam/cert-primary.pem;

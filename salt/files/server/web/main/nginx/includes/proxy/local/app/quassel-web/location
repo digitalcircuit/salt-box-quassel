@@ -1,0 +1,22 @@
+# Quassel Web - Location
+# ------------------------
+# Specify the following within the location block for Quassel
+	## [Quassel Web - Location]
+	#include includes/main/proxy/local/app/quassel-web/location;
+
+# Grafana proxying configuration
+
+# Proxy location
+# ----
+
+# [Proxy headers for all proxies]
+include includes/common/proxy/common;
+
+# Add WebSocket support
+# See https://developer.mozilla.org/en-US/docs/Web/HTTP/Protocol_upgrade_mechanism
+proxy_set_header Upgrade $http_upgrade;
+proxy_set_header Connection "upgrade";
+proxy_http_version 1.1;
+
+# Connect to Quassel Web
+proxy_pass http://local-app-quassel-web/chat;

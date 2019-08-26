@@ -1,0 +1,7 @@
+#!/bin/bash
+# Reload nginx to pick up certbot changes
+#
+# Directory: "$CERTBOT_SETUP_RENEWED_LINEAGE"
+# Private key: "$CERTBOT_SETUP_RENEWED_LINEAGE/privkey.pem"
+
+systemctl reload nginx.service

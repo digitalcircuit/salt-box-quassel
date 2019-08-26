@@ -1,0 +1,16 @@
+#!/bin/bash
+# Reload Quassel to pick up certbot changes
+#
+# Directory: "$CERTBOT_SETUP_RENEWED_LINEAGE"
+# Private key: "$CERTBOT_SETUP_RENEWED_LINEAGE/privkey.pem"
+
+QUASSEL_PATH_KEY="/var/lib/quassel/le-privkey.pem"
+QUASSEL_PATH_CERT="/var/lib/quassel/le-fullchain.pem"
+
+# Copy private and public keys
+cp "$CERTBOT_SETUP_RENEWED_LINEAGE/privkey.pem" "$QUASSEL_PATH_KEY"
+cp "$CERTBOT_SETUP_RENEWED_LINEAGE/fullchain.pem" "$QUASSEL_PATH_CERT"
+chown quasselcore:quassel "$QUASSEL_PATH_KEY" "$QUASSEL_PATH_CERT"
+chmod 640 "$QUASSEL_PATH_KEY" "$QUASSEL_PATH_CERT"
+# Quassel 0.13+: reload certificate via SIGHUP signal
+systemctl reload quasselcore

@@ -1,0 +1,12 @@
+# Common Configuration
+# ------------------------
+# Specify the following in the server configuration file within the main server block
+	## [Common Configuration]
+	#include includes/common/conf_common;
+	#
+
+# Charset
+charset UTF-8;
+
+# [Common Headers Configuration]
+include includes/common/headers_common;

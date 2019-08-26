@@ -1,0 +1,23 @@
+# Common Deny configuration
+# ------------------------
+# Specify the following in the server configuration file within the main server block
+	## [Deny Configuration]
+	#include includes/common/deny_common;
+	#
+
+# Denying access
+# > Apache .htaccess files
+location ~ /\.ht {
+	deny all;
+	return 404;
+}
+# > Git folders
+location ~ /\.git {
+	deny all;
+	return 404;
+}
+# > Configuration
+location ~ /config.(php|ini) {
+	deny all;
+	return 404;
+}

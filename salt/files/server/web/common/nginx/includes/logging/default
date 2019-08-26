@@ -1,0 +1,10 @@
+# Default Logging Configuration
+# ------------------------
+# Specify the following in the server configuration file within the main server block
+	## [Default Logging Configuration]
+	#include includes/common/logging/default;
+	#
+
+# Combined all-domain logging
+access_log /var/log/nginx/access.log combined_host;
+error_log /var/log/nginx/error.log;

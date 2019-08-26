@@ -1,0 +1,10 @@
+# Exclude Indexing configuration
+# ------------------------
+# Specify the following in any location blocks that specify headers
+	## [Exclude Indexing Configuration]
+	#include includes/common/exclude_indexing;
+	#
+
+# Disable all indexing
+add_header X-Robots-Tag "none, noindex, nofollow" always;
+

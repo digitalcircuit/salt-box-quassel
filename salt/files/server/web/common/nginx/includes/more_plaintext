@@ -1,0 +1,11 @@
+# More Plaintext
+# ------------------------
+# Specify the following in the server configuration file within the main server block
+	## [More Plaintext]
+	#include includes/common/more_plaintext;
+	#
+
+# Set these files as text/plain
+location ~ \.(sh|conf|cfg|diff|patch)$ {
+	default_type text/plain;
+}

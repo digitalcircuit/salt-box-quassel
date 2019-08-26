@@ -1,4 +1,16 @@
 #!/bin/bash
 # Let's Encrypt renew hook
-# Calls the certbot-setup.sh script with the argument 'reload'
-/root/salt/certbot/certbot-setup.sh reload "{{ salt['pillar.get']('system:hostname', 'dev') }}"
+# Calls the certbot-setup.sh script with the argument 'deploy'
+#
+# "RENEWED_LINEAGE" is set by certbot and represents the full path to the
+# certificate, e.g. "$RENEWED_LINEAGE/fullchain.pem"
+#
+# "RENEWED_DOMAINS" represents a separated list of domain names
+#
+# See https://github.com/certbot/certbot/blob/master/docs/using.rst#renewing-certificates
+/root/salt/certbot/certbot-setup.sh "{{ certbot_setup_cert_dir }}" deploy "$(basename "$RENEWED_LINEAGE")"
+
+# "{{ certbot_setup_cert_dir }}" refers to certbot-setup.sh certificate
+# configuration directory
+
+# Pass folder name, not the full path
