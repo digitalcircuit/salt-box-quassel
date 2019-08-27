@@ -6,10 +6,11 @@
 	#
 
 # Provide custom error pages for the following
-error_page 401 /errors/401.html;
-error_page 403 /errors/403.html;
-error_page 404 /errors/404.html;
-error_page 500 502 503 504 /errors/50x.html;
+error_page 401 /errors/401.html; # Authentication Required
+error_page 403 /errors/403.html; # Access Denied
+error_page 404 /errors/404.html; # Not Found
+error_page 429 /errors/429.html; # Too Many Requests
+error_page 500 502 503 504 /errors/50x.html; # Server errors
 
 location /errors {
 	# Don't allow outside access

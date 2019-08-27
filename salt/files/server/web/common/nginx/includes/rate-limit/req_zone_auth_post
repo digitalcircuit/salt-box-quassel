@@ -1,0 +1,19 @@
+# Rate limit settings for authentication
+# ------------------------
+# Specify the following in the location block of any authentication requests
+	## [Rate limit settings for authentication]
+	#include includes/common/rate-limit/req_zone_auth;
+
+# [Rate limit settings for all zones]
+include includes/common/rate-limit/common;
+
+# Limit number of requests, with bursting to allow initial tries
+#
+# Allow up to 3 extra requests in a burst (no delay), reject excess
+limit_req zone=common_auth burst=5 nodelay;
+
+# NOTE: Delay parameter is introduced in nginx 1.15.7
+# Allow 5 tries before subjecting to rate limit
+# Allow 3 immediate tries, delay the next 2 (burst - delay) afterwards, then reject excess
+# This reduces initial appearance of error page
+#limit_req zone=common_auth burst=5 delay=3;

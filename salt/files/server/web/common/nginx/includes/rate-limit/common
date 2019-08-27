@@ -1,0 +1,13 @@
+# Rate limit settings for all zones
+# ------------------------
+# Specify the following in the location block of the rate-limit zone specific files
+	## [Rate limit settings for all zones]
+	#include includes/common/rate-limit/common;
+
+# Use the designated HTTP status code 429 - Too Many Requests
+# See https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+#
+limit_req_status 429;
+#
+# If custom error pages are being used, it's suggested to provide one for 429
+# as well.

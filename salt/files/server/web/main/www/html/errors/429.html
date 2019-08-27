@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="UTF-8">
+<title>Slow down - error 429</title>
+<link rel="stylesheet" type="text/css" href="/style/theme/base.css">
+<!-- See https://www.w3.org/Style/Examples/007/alternatives.en.html -->
+<link rel="stylesheet" type="text/css" href="/style/theme/base_light.css" title="Light">
+<link rel="stylesheet alternate" type="text/css" href="/style/theme/base_dark.css" title="Dark">
+<!-- Thanks https://realfavicongenerator.net/ ! -->
+<!-- Original icon from justJanne, https://github.com/justjanne/quassel-icons -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=2">
+<link rel="manifest" href="/site.webmanifest?v=2">
+<link rel="mask-icon" href="/safari-pinned-tab.svg?v=2" color="#1969cb">
+<meta name="msapplication-TileColor" content="#1969cb">
+<meta name="theme-color" content="#1969cb">
+<!-- End favicon -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head><body>
+<div id="wrap">
+	<center><h1>Slow down</h1></center>
+	<h2><a name="header">Error 429 - too many requests</a></h2>
+	<h3><a name="header_sub">Wait a while, then refresh the page</a></h3>
+	<p>You're navigating too quickly.  In a few seconds, refresh the page to try again.</p>
+{% if salt['pillar.get']('server:chat:quassel:branding:errors:show_contact', False) == True -%}
+	<br>
+	<p><em>Try again in a bit, and if it's still broken, {{ salt['pillar.get']('server:chat:quassel:branding:errors:contact_prompt', "send me a message") }}.</em></p>
+{%- endif %}
+</div>
+</body>
+</html>

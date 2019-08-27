@@ -62,11 +62,23 @@ server {
 	include includes/common/letsencrypt_challenge;
 
 	# Quassel Rest Search
+	location /search/login.php {
+		# [Enable PHP Handler]
+		include includes/common/php_handler;
+
+		# [Rate limit settings for authentication]
+		include includes/common/rate-limit/req_zone_auth_post;
+	}
 	location /search/ {
 		# [Enable PHP Handler]
 		include includes/common/php_handler;
+
+		location /search/web/search/ {
+			# [Rate limit settings for resource-intensive]
+			include includes/common/rate-limit/req_zone_slow;
+		}
 	}
-	
+
 	# Quassel Web server, from https://github.com/magne4000/quassel-webserver
 	location /chat {
 		# [Quassel Web - Location]
