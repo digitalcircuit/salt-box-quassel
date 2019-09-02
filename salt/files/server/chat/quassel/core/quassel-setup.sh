@@ -67,12 +67,24 @@ QSETUP_ANSWERS
 }
 
 quassel_is_configured () {
-	if grep "StorageSettings=" --quiet "$QUASSEL_CONFIG_DIR/quasselcore.conf"; then
-		# Storage backend has been configured
-		return 0
-	else
+	local EXPECTED_ARGS=1
+	if [ $# -ne $EXPECTED_ARGS ]; then
+		echo "Usage: `basename "$0"` [quassel_is_configured] {PSQL database name}" >&2
 		return 1
 	fi
+	local QUASSEL_PSQL_DB_NAME="$1"
+
+	if ! grep "StorageSettings=" --quiet "$QUASSEL_CONFIG_DIR/quasselcore.conf"; then
+		# Storage backend has not been configured
+		return 1
+	fi
+	if ! sudo --user=postgres --login psql "$QUASSEL_PSQL_DB_NAME" --command="select * from backlog"; then # >/dev/null 2>&1; then
+		# Database is not set up
+		return 1
+	fi
+
+	# Configured
+	return 0
 }
 
 quassel_configure () {
@@ -89,7 +101,7 @@ quassel_configure () {
 	local QUASSEL_ADMIN_USER_NAME="$6"
 	local QUASSEL_ADMIN_USER_PASSWORD="$7"
 	
-	if ! quassel_is_configured; then
+	if ! quassel_is_configured "$QUASSEL_PSQL_DB_NAME"; then
 		local QUASSEL_STOPPED=false
 		if quassel_running; then
 			echo "> Stopping Quassel core (systemctl stop $QUASSEL_SERVICE_NAME)..."
@@ -116,9 +128,15 @@ EXPECTED_ARGS=1
 if [ $# -ge $EXPECTED_ARGS ]; then
 	case $1 in
 		"check" )
-			quassel_is_configured
-			# Return the status code
-			exit $?
+			EXPECTED_ARGS=2 # 1 + 1
+			if [ $# -eq $EXPECTED_ARGS ]; then
+				quassel_is_configured "$2"
+				# Return the status code
+				exit $?
+			else
+				echo "Usage: `basename $0` check {PSQL database name}" >&2
+				exit 1
+			fi
 			;;
 		"configure" )
 			EXPECTED_ARGS=8 # 1 + 7

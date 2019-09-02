@@ -22,7 +22,7 @@ server.chat.quassel.core.database:
     - require:
       - service: storage.database
 
-# Set up backend connection information
+# Set up core connection information
 server.chat.quassel.core.service.config.defaults:
   file.managed:
     - name: /etc/default/quasselcore
@@ -134,7 +134,7 @@ server.chat.quassel.core.configure:
       # {PSQL user name} {PSQL user password} {PSQL hostname} {PSQL port} {PSQL database name} {Quassel admin user name} {Quassel admin user password}
 #    - source: salt://files/server/chat/quassel/core/quassel-setup.sh
     # Ignore if storage settings already configured
-    - unless: /root/salt/quassel/quassel-setup.sh check
+    - unless: /root/salt/quassel/quassel-setup.sh check "{{ salt['pillar.get']('server:chat:quassel:database:name', 'quassel') }}"
     - require:
       # Require database to be set up
       - postgres_user: server.chat.quassel.core.database
