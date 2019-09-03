@@ -31,6 +31,8 @@ storage.database.tune.include:
     - text:
       - "# Salt: include a common configuration directory to simplify management"
       - "include_dir = 'conf.d'"
+    - require:
+      - pkg: storage.database
 storage.database.tune.config:
   file.managed:
     - name: "{{ PG_CONF_DIR }}/main/conf.d/tune.conf"
