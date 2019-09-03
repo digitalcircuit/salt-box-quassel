@@ -153,11 +153,15 @@ server.chat.quassel.core.config.dummy_certs.fullcert:
     - name: /var/lib/quassel/le-fullchain.pem
     - source: salt://files/server/certbot/dummy_certs/cert.pem
     - replace: False
+    - require:
+      - pkg: server.chat.quassel.core
 server.chat.quassel.core.config.dummy_certs.privkey:
   file.managed:
     - name: /var/lib/quassel/le-privkey.pem
     - source: salt://files/server/certbot/dummy_certs/privkey.pem
     - replace: False
+    - require:
+      - pkg: server.chat.quassel.core
 # ---
 
 # Apply lockdown policies
