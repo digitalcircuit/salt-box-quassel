@@ -1,12 +1,14 @@
 # General webserver
 
 nginx:
-  pkg.installed: []
+  pkg.installed:
+    - pkgs:
+      - nginx
   service.running:
     # Make sure configuration is in place first, and restart if any of it changes
+    - name: nginx
     - watch:
-      - file: nginx.config.includes
-      - file: nginx.config.disable-default
+      - pkg: nginx
 
 # Set up basic configuration
 nginx.config.confd.file:
@@ -52,6 +54,8 @@ www-data.common:
     - source: salt://files/server/web/common/www/_common
     - makedirs: True
     - clean: True
+    - watch_in:
+      - service: nginx
 
 # PHP
 web-php:

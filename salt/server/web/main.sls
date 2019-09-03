@@ -20,6 +20,9 @@ web.main.nginx.config.enable:
     - name: /etc/nginx/sites-enabled/main
     - target: /etc/nginx/sites-available/main
     - makedirs: True
+    # Install nginx first
+    - require:
+      - pkg: nginx
     - watch_in:
       - service: nginx
 
