@@ -9,9 +9,6 @@ storage.database:
     - name: postgresql
     # No need to do a full restart
     - reload: True
-    - watch:
-      - file: storage.database.tune.include
-      - file: storage.database.tune.config
 
 # HACK: Get the PostgreSQL configuration directory in advance so compilation doesn't fail.
 # salt['postgres.version']() -> 9.5.5, extra .5 is not wanted
@@ -26,16 +23,24 @@ storage.database:
 # {% endfor %}
 
 storage.database.tune.include:
-  file.append:
+  file.blockreplace:
     - name: "{{ PG_CONF_DIR }}/main/postgresql.conf"
-    - text:
-      - "# Salt: include a common configuration directory to simplify management"
-      - "include_dir = 'conf.d'"
+    - marker_start: "# [START managed zone, controlled by SaltStack]"
+    - marker_end: "# [END managed zone, controlled by SaltStack]"
+    - content: |
+        # Salt: include a common configuration directory to simplify management
+        include_dir = 'conf.d'
+    # Add to end if missing
+    - append_if_not_found: True
     - require:
       - pkg: storage.database
+    - watch_in:
+      - service: storage.database
 storage.database.tune.config:
   file.managed:
     - name: "{{ PG_CONF_DIR }}/main/conf.d/tune.conf"
     - source: salt://files/server/storage/postgresql/postgres-tune.conf
     - template: jinja
     - makedirs: True
+    - watch_in:
+      - service: storage.database
