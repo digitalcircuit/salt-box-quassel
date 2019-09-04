@@ -251,7 +251,7 @@ server.chat.quassel.core.netlockdown.cleanup.refresh.timer:
   service.dead:
     - name: network-user-whitelist-refresh.timer
     - enable: False
-server.chat.quassel.core.netlockdown.refresh.service.running:
+server.chat.quassel.core.netlockdown.cleanup.refresh.service.running:
   # Disable startup
   service.disabled:
     - name: network-user-whitelist-refresh
