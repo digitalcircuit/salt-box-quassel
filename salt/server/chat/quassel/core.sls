@@ -2,6 +2,10 @@
 
 include:
   - server.storage.database
+{% if salt['pillar.get']('common:backup:system:enable', False) == True %}
+  # For backup module
+  - common.backup.system
+{% endif %}
 
 server.chat.quassel.core.database:
   pkg.installed:
@@ -163,6 +167,30 @@ server.chat.quassel.core.config.dummy_certs.privkey:
     - require:
       - pkg: server.chat.quassel.core
 # ---
+
+# Backup module
+# ####
+{% if salt['pillar.get']('common:backup:system:enable', False) == True %}
+# Set archive directory
+{% set archive_configdir = salt['pillar.get']('common:backup:system:storage:datadir', '/root/salt/backup/system') %}
+{% set archive_moduledir = archive_configdir | path_join('scripts.d') %}
+server.chat.quassel.core.backupmgr:
+  file.managed:
+    - name: {{ archive_moduledir }}/quassel-backup
+    - source: salt://files/server/chat/quassel/core/quassel-backup
+    - makedirs: True
+    # Specify database name
+    - template: jinja
+    - context:
+        quassel_db_name: "{{ salt['pillar.get']('server:chat:quassel:database:name', 'quassel') }}"
+    # Mark as executable
+    - mode: 755
+    - require:
+      - service: server.chat.quassel.core
+    - watch_in:
+      - cmd: common.backup.system.configure
+{% endif %}
+# ####
 
 # Apply lockdown policies
 {% if salt['pillar.get']('server:chat:quassel:lockdown:strict-networks:enabled', False) == True %}

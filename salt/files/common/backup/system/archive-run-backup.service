@@ -1,0 +1,14 @@
+# systemd unit file for archive backup system
+# Based on:  https://bbs.archlinux.org/viewtopic.php?id=148170
+# And: https://blog.hqcodeshop.fi/archives/93-Handling-varrun-with-systemd.html
+[Unit]
+Description=Run system-wide backup
+After=local-fs.target network.target
+
+[Service]
+Type=oneshot
+# Run the backup script
+ExecStart=/bin/bash {{ control_script }} backup
+
+[Install]
+WantedBy=multi-user.target

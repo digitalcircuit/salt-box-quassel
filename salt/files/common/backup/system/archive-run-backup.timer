@@ -1,0 +1,14 @@
+# Part of archive-run-backup.service
+# See https://wiki.archlinux.org/index.php/Systemd/Timers
+[Unit]
+Description=Run system-wide backup
+
+[Timer]
+# Run once a day (midnight)
+# See systemd-analyze calendar daily
+OnCalendar=daily
+# Catch up as soon as possible
+Persistent=true
+
+[Install]
+WantedBy=timers.target

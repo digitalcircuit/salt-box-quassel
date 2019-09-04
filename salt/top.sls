@@ -3,6 +3,9 @@ base:
   '*':
     # Activate swap first if enabled to avoid out-of-memory conditions
     - common.swapfile
+    # Run backups
+    - common.backup.rclone-archive
+    - common.backup.system
     # Full Quassel install
     - server.chat.quassel.top
     # Optional status reporting

@@ -1,0 +1,6 @@
+{% for STORAGE_NAME, args in salt['pillar.get']('common:backup:rclone-archive:backends', {}).items() %}
+[{{ STORAGE_NAME }}]
+{%- for ENTRY_KEY, ENTRY_VALUE in args.items() %}
+{{ ENTRY_KEY }} = {{ ENTRY_VALUE }}
+{%- endfor %}
+{% endfor %}

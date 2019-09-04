@@ -1,0 +1,128 @@
+#!/bin/bash
+# See http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -euo pipefail
+
+_LOCAL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Get directory of this file
+
+#-------------------------------------------------------------
+if [ -z "${MODULE_ARCHIVE_UTIL_SCRIPT_LOADED:-}" ]; then
+	# Up one directory from here
+	source "$_LOCAL_DIR/../util-archive-script.sh"
+fi
+#-------------------------------------------------------------
+# Check if session environment is prepared
+if [ -z "${MODULE_ARCHIVE_UTIL_SCRIPT_LOADED:-}" ]; then
+	# Quit as nothing can happen
+	echo "Archive script utility module not loaded, does the file 'util-archive-script.sh' exist? (will now exit)" >&2
+	exit 1
+fi
+#-------------------------------------------------------------
+
+# Name of archive (e.g. "service")
+AMOD_BACKUP_NAME="example-backup"
+# Primary: name of main data to archive (e.g. "configuration")
+AMOD_BACKUP_PRIMARY_NAME="main"
+# Primary: description of main data to archive (e.g. "User configuration")
+AMOD_BACKUP_PRIMARY_DESCRIPTION="primary data"
+# Primary: source of main data on filesystem
+AMOD_BACKUP_PRIMARY_SOURCE="$ARCHIVE_SYSTEM_ROOT_PREFIX/tmp/dummy-test-dir"
+
+# Calculated in util-archive-script
+# Root directory of all archives
+AMOD_ARCHIVE_PATH_ROOT=""
+# Directory for archive storage
+AMOD_ARCHIVE_DIR=""
+# Primary stored archive filename, no extension
+AMOD_BACKUP_PRIMARY_FILENAME=""
+
+# Determine paths
+EXPECTED_ARGS=1
+if [ $# -ge $EXPECTED_ARGS ]; then
+	ARCHIVE_CMD="$1"
+
+	# Determine and process commands
+	case "$ARCHIVE_CMD" in
+		"create-fake-data" )
+			# Create sample content
+			mkdir --parents "$AMOD_BACKUP_PRIMARY_SOURCE"
+			SOURCE_FILE="$AMOD_BACKUP_PRIMARY_SOURCE/dummy-source"
+			SOURCE_FILE2="$AMOD_BACKUP_PRIMARY_SOURCE/dummy-source2"
+			cat >"$SOURCE_FILE" <<EOL
+[$(date)] Content, yo!
+EOL
+
+			cat >"$SOURCE_FILE2" <<EOL
+[$(date)] More stuff
+EOL
+			;;
+		"backup" )
+			# Check arguments
+			EXPECTED_ARGS_ARCHIVE=2
+			if [ $# -ne $EXPECTED_ARGS_ARCHIVE ]; then
+				echo "Usage: `basename $0` backup {path to backup archive working directory}" >&2
+				exit 1
+			fi
+			AMOD_ARCHIVE_PATH_ROOT="$2"
+			archive_script_check_paths || return 1
+
+			# 1. Stop services (if needed)
+			# 2. Backup
+			echo "[$(date --rfc-3339=seconds)] [example] Backing up stuff..."
+			# Whole folder:
+			BACKUP_OPTIONS=("$AMOD_BACKUP_PRIMARY_SOURCE" "$AMOD_BACKUP_PRIMARY_FILENAME" "$AMOD_BACKUP_PRIMARY_DESCRIPTION")
+			#
+			# Specific files
+			#BACKUP_OPTIONS=("$AMOD_BACKUP_PRIMARY_SOURCE" "$AMOD_BACKUP_PRIMARY_FILENAME" "$AMOD_BACKUP_PRIMARY_DESCRIPTION" "folderA" "file1" "file2")
+			#
+			# Excluding patterns
+			#BACKUP_EXCLUDE_PATTERNS=("*.pem" ".cache/temporary_file")
+			#archive_backup_directory BACKUP_OPTIONS[@] BACKUP_EXCLUDE_PATTERNS[@]
+			if ! archive_backup_directory BACKUP_OPTIONS[@]; then
+				echo "Error: unable to backup" >&2
+				exit 1
+			fi
+			# 3. Restore services (if needed)
+
+			echo "[$(date --rfc-3339=seconds)] [example] Backup done"
+			;;
+		"check" )
+			# Make sure everything needed to backup and restore is in place
+			# Put any dependency checks here
+			exit 0
+			;;
+		"restore" )
+			# Check arguments
+			EXPECTED_ARGS_ARCHIVE=2
+			if [ $# -ne $EXPECTED_ARGS_ARCHIVE ]; then
+				echo "Usage: `basename $0` restore {path to backup archive working directory}" >&2
+				exit 1
+			fi
+			AMOD_ARCHIVE_PATH_ROOT="$2"
+			archive_script_check_paths || return 1
+
+			# 1. Stop services
+			# TODO: actually stop service!
+			# systemctl stop example-daemon.service
+
+			# 2. Restore
+			echo "[$(date --rfc-3339=seconds)] [example] Restoring stuff..."
+			if ! archive_restore_directory "$AMOD_BACKUP_PRIMARY_FILENAME" "$AMOD_BACKUP_PRIMARY_SOURCE"; then
+				echo "Error: unable to restore" >&2
+				exit 1
+			fi
+			# 3. Restart services
+			# TODO: actually start service!
+			# systemctl start example-daemon.service
+
+			echo "[$(date --rfc-3339=seconds)] [example] Restore done"
+			;;
+		* )
+			archive_script_print_usage
+			exit 1
+			;;
+	esac
+else
+	archive_script_print_usage
+	exit 1
+fi
