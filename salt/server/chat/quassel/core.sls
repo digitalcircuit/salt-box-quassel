@@ -52,8 +52,8 @@ server.chat.quassel.core.repo.channel_cleanup:
     - ppa: mamarley/quassel-beta
 {% endif %}
 
-# Install Quassel itself
-server.chat.quassel.core:
+# Install Quassel PPA
+server.chat.quassel.core.repo:
   pkgrepo.managed:
 {% if salt['pillar.get']('versions:quassel:core:beta', False) == True %}
     # Beta requested
@@ -66,14 +66,22 @@ server.chat.quassel.core:
     - comments:
         - 'Quassel stable PPA for Ubuntu'
 {% endif %}
+  pkg.uptodate:
+    # Only update if changes are made
+    - onchanges:
+      - pkgrepo: server.chat.quassel.core.repo
+    - require_in:
+      - pkg: server.chat.quassel.core
+
+# Install Quassel itself
+server.chat.quassel.core:
   pkg.installed:
 # PPA version
     - pkgs:
       - quassel-core
-    - refresh: True
     # Make sure PPA is set up first
     - require:
-      - pkgrepo: server.chat.quassel.core
+      - pkgrepo: server.chat.quassel.core.repo
 # Git version
 #    - sources:
 #      - quassel-core: salt://files/server/chat/quassel/core/quassel-core_git-tested_amd64.deb
