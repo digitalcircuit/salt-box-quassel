@@ -5,6 +5,7 @@ include includes/main/proxy/local/app/quassel-web/upstream;
 # HTTP
 server {
 	# Listen on default port for non-SSL
+	listen [::]:80 default_server;
 	listen 80 default_server;
 
 	# Addresses this server should respond to
@@ -28,6 +29,7 @@ server {
 # HTTPS
 server {
 	# Listen on default port for SSL
+	listen [::]:443 default_server ssl http2;
 	listen 443 default_server ssl http2;
 
 	# [main Domain Configuration]
