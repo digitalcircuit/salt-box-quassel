@@ -78,7 +78,7 @@ quassel_is_configured () {
 		# Storage backend has not been configured
 		return 1
 	fi
-	if ! sudo --user=postgres --login psql "$QUASSEL_PSQL_DB_NAME" --command="select * from backlog"; then # >/dev/null 2>&1; then
+	if ! sudo --user=postgres --login psql "$QUASSEL_PSQL_DB_NAME" --command="select messageid from backlog limit 1"; then # >/dev/null 2>&1; then
 		# Database is not set up
 		return 1
 	fi
