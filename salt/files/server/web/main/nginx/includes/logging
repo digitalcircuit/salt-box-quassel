@@ -16,5 +16,5 @@ include includes/common/logging/default;
 # That file must be included within the HTTP block.
 
 # Domain-separated logging
-access_log /var/log/nginx/domain_{{ salt['pillar.get']('server:hostnames:cert-primary:root') }}.access.log combined;
-error_log /var/log/nginx/domain_{{ salt['pillar.get']('server:hostnames:cert-primary:root') }}.error.log;
+access_log /var/log/nginx/domain_quassel.access.log combined;
+error_log /var/log/nginx/domain_quassel.error.log;
