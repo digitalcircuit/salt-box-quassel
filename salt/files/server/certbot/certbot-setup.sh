@@ -260,7 +260,7 @@ certbot_deploy_all ()
 
 	if [[ "$CERTBOT_SETUP_CERTS_LOADED" != "true" ]]; then
 		# Ensure certs are loaded
-		certbot_get_certs "/tmp/cert" || return 1
+		certbot_get_certs "$CERTBOT_SETUP_PATH" || return 1
 	fi
 
 	# If nothing to configure, all good
@@ -298,7 +298,7 @@ certbot_is_all_configured ()
 
 	if [[ "$CERTBOT_SETUP_CERTS_LOADED" != "true" ]]; then
 		# Ensure certs are loaded
-		certbot_get_certs "/tmp/cert" || return 1
+		certbot_get_certs "$CERTBOT_SETUP_PATH" || return 1
 	fi
 
 	# If nothing to configure, all good
@@ -326,7 +326,7 @@ certbot_configure_all ()
 
 	if [[ "$CERTBOT_SETUP_CERTS_LOADED" != "true" ]]; then
 		# Ensure certs are loaded
-		certbot_get_certs "/tmp/cert" || return 1
+		certbot_get_certs "$CERTBOT_SETUP_PATH" || return 1
 	fi
 
 	# If nothing to configure, all good
@@ -358,7 +358,7 @@ certbot_deploy_cert ()
 
 	if [[ "$CERTBOT_SETUP_CERTS_LOADED" != "true" ]]; then
 		# Ensure certs are loaded
-		certbot_get_certs "/tmp/cert" || return 1
+		certbot_get_certs "$CERTBOT_SETUP_PATH" || return 1
 	fi
 
 
@@ -390,7 +390,7 @@ certbot_deploy_cert ()
 	echo "$CERTBOT_LOG_PREFIX Processing deploy hooks"
 	# Set environment for command
 	CERTBOT_SETUP_RENEWED_LINEAGE="$CERT_LIVE_DIR" \
-		run-parts --lsbsysinit "$CERT_HOOKS_DIR"
+		run-parts --lsbsysinit --report "$CERT_HOOKS_DIR"
 }
 
 certbot_is_configured ()
@@ -405,7 +405,7 @@ certbot_is_configured ()
 
 	if [[ "$CERTBOT_SETUP_CERTS_LOADED" != "true" ]]; then
 		# Ensure certs are loaded
-		certbot_get_certs "/tmp/cert" || return 1
+		certbot_get_certs "$CERTBOT_SETUP_PATH" || return 1
 	fi
 
 	local CERTBOT_LOG_PREFIX="$CERTBOT_LOG_PREFIX [check: $CERT_NAME]"
@@ -492,7 +492,7 @@ certbot_configure_cert ()
 
 	if [[ "$CERTBOT_SETUP_CERTS_LOADED" != "true" ]]; then
 		# Ensure certs are loaded
-		certbot_get_certs "/tmp/cert" || return 1
+		certbot_get_certs "$CERTBOT_SETUP_PATH" || return 1
 	fi
 
 	if certbot_is_configured "$CERTS_DIR" "$CERT_NAME"; then
@@ -559,23 +559,24 @@ certbot_configure_cert ()
 }
 
 #echo "### TEST certbot_get_certs ###"
+#CERTBOT_SETUP_PATH="/tmp/cert"
 #if [[ "$CERTBOT_SETUP_CERTS_LOADED" != "true" ]]; then
 #	# Ensure certs are loaded
-#	certbot_get_certs "/tmp/cert" || exit 1
+#	certbot_get_certs "$CERTBOT_SETUP_PATH" || exit 1
 #fi
 #
 #echo "### TEST certbot_deploy_all ###"
-#certbot_deploy_all "/tmp/cert"
+#certbot_deploy_all "$CERTBOT_SETUP_PATH"
 #
 #echo "### TEST certbot_is_all_configured ###"
-#if certbot_is_all_configured "/tmp/cert"; then
+#if certbot_is_all_configured "$CERTBOT_SETUP_PATH"; then
 #	echo "Configured"
 #else
 #	echo "Not configured"
 #fi
 #
 #echo "### TEST certbot_configure_all ###"
-#certbot_configure_all "/tmp/cert"
+#certbot_configure_all "$CERTBOT_SETUP_PATH"
 #
 #echo "### DEBUGGING TEST ###"
 #exit 0
