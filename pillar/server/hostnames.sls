@@ -1,4 +1,4 @@
-# Remote details
+# Hostname details
 server:
   # Hostnames
   hostnames:
