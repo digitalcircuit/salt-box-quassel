@@ -10,6 +10,22 @@ Type=simple
 User={{ salt['pillar.get']('server:chat:quassel:web:username', 'quassel-web') }}
 SyslogIdentifier=quassel-webserver
 Restart=on-failure
+# Protections
+# > Basic
+ProtectSystem=strict
+PrivateTmp=true
+# > More thorough
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+ProtectKernelModules=true
+PrivateDevices=true
+SystemCallArchitectures=native
+CapabilityBoundingSet=~CAP_SYS_ADMIN
+# > Allow writing to home directory and socket
+# (Specific directory might not exist, allow more general access)
+ReadWritePaths=/srv/{{ salt['pillar.get']('server:chat:quassel:web:username', 'quassel-web') }} /var/run
+# ---
 # Run NodeJS in production mode (caching, etc)
 Environment=NODE_ENV=production
 # Startup
@@ -20,7 +36,7 @@ ExecStartPre=-/bin/mkdir {{ salt['pillar.get']('server:chat:quassel:web:socket_d
 ExecStartPre=/bin/chown -R {{ salt['pillar.get']('server:chat:quassel:web:username', 'quassel-web') }}:{{ salt['pillar.get']('server:chat:quassel:web:username', 'quassel-web') }} {{ salt['pillar.get']('server:chat:quassel:web:socket_dir', '/var/run/quassel-web') }}
 ExecStartPre=-/bin/rm {{ salt['pillar.get']('server:chat:quassel:web:socket_dir', '/var/run/quassel-web') }}/quassel-web.sock
 # Run ExecStart with User/Group permissions above
-ExecStart=/usr/bin/node "/home/{{ salt['pillar.get']('server:chat:quassel:web:username', 'quassel-web') }}/quassel_web_root/qweb/quassel-webserver/app.js" --socket="{{ salt['pillar.get']('server:chat:quassel:web:socket_dir', '/var/run/quassel-web') }}/quassel-web.sock"
+ExecStart=/usr/bin/node "/srv/{{ salt['pillar.get']('server:chat:quassel:web:username', 'quassel-web') }}/quassel_web_root/qweb/quassel-webserver/app.js" --socket="{{ salt['pillar.get']('server:chat:quassel:web:socket_dir', '/var/run/quassel-web') }}/quassel-web.sock"
 
 [Install]
 WantedBy=multi-user.target

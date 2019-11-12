@@ -1,23 +1,34 @@
 # Quassel Web, which requires NodeJS
 
 {% set qweb_user = salt['pillar.get']('server:chat:quassel:web:username', 'quassel-web') %}
-{% set qweb_home_dir = '/home' | path_join(qweb_user) %}
+{% set qweb_home_dir = '/srv' | path_join(qweb_user) %}
 {% set qweb_work_dir = qweb_home_dir | path_join('quassel_web_root') %}
 {% set qweb_repo_parent_dir = qweb_work_dir | path_join('qweb') %}
 {% set qweb_repo_dir = qweb_repo_parent_dir | path_join('quassel-webserver') %}
+
+{% set qweb_home_dir_legacy = '/home' | path_join(qweb_user) %}
 
 # Require Quassel and NodeJS to be installed first
 include:
   - .core
   - common.nodejs
 
+# Stop the service if running and changes will be made
+server.chat.quassel.web.user-basic.stop-for-changes:
+  service.dead:
+    - name: quassel-web
+    - prereq:
+      # Stop service before making changes
+      - user: server.chat.quassel.web.user-basic
+
 # Set up the user
-quassel-web.user-basic:
+server.chat.quassel.web.user-basic:
   user.present:
     - name: {{ qweb_user }}
     - fullname: 'Quassel Web server user'
     - system: True
     - createhome: False # Handled below
+    - home: {{ qweb_home_dir }}
   file.directory:
     - name: {{ qweb_home_dir }}
     - user: root
@@ -26,6 +37,7 @@ quassel-web.user-basic:
     # Not required, but neither is global access, either - Salt manages this
     # Also, enforce read-only mode
     - mode: 550
+    - makedirs: True
 
 server.chat.quassel.web.user-rw:
   file.directory:
@@ -40,11 +52,6 @@ server.chat.quassel.web.user-rw:
       - {{ qweb_home_dir }}/.node-gyp
       # Git configuration
       - {{ qweb_home_dir }}/.config
-#      # TODO - are the following needed?
-#      - /home/quassel-web/.local/share"
-#       > Why does Nano require a different directory?  :(
-#      - /home/quassel-web/.nano"
-#      - /home/quassel-web/.cache"
 
 # Stop the Quassel Web service if already running.. only if changes will be
 # made.  It'll be started back up by the later service check.
@@ -141,3 +148,10 @@ server.chat.quassel.web.service:
       # Ensure deployed first
       - file: server.chat.quassel.web.config
       - cmd: server.chat.quassel.web.repo.build.npm
+
+# --- Migrations ---
+# 2019-11-11: Home directory changed to '/srv' rather than '/home'
+# Delete data from the old user
+server.chat.quassel.web.migrations.move-user-home:
+  file.absent:
+    - name: {{ qweb_home_dir_legacy }}
