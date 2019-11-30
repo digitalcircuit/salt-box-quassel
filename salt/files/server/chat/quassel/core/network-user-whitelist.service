@@ -10,6 +10,24 @@ Type=oneshot
 # Need to do cleanup, too
 RemainAfterExit=yes
 SyslogIdentifier=network-user-whitelist
+# Protections
+# > Basic
+ProtectSystem=strict
+PrivateTmp=true
+# > More thorough
+#ProtectHome=true
+# Don't block /root for configuration data
+InaccessiblePaths=/home /run/user
+# Allow access to configuration
+ReadOnlyPaths=/root
+ProtectKernelTunables=true
+ProtectControlGroups=true
+# Allow inserting iptables/ip6tables kernel modules
+#ProtectKernelModules=true
+PrivateDevices=true
+SystemCallArchitectures=native
+CapabilityBoundingSet=~CAP_SYS_ADMIN
+# ---
 # Startup
 ExecStart=/root/salt/quassel/network-user-whitelist-configure.sh enable
 # Refresh

@@ -271,10 +271,18 @@ whitelist_resolve() {
 
 	local HOST="$2"
 
+
+	# When running with root, drop privileges for network operations
+	local DROP_ROOT_CMD="sudo --user=nobody"
+	if [ "$NET_WHITELIST_DRYRUN" = true ]; then
+		# Don't require sudo when not making changes
+		DROP_ROOT_CMD=""
+	fi
+
 	if [ "$CHECK_IPV6" = true ]; then
-		getent ahostsv6 "$HOST" | cut --fields=1 --delimiter=" " | sort --unique
+		$DROP_ROOT_CMD getent ahostsv6 "$HOST" | cut --fields=1 --delimiter=" " | sort --unique
 	else
-		getent ahostsv4 "$HOST" | cut --fields=1 --delimiter=" " | sort --unique
+		$DROP_ROOT_CMD getent ahostsv4 "$HOST" | cut --fields=1 --delimiter=" " | sort --unique
 	fi
 }
 
