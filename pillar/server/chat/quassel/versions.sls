@@ -25,4 +25,4 @@ server:
 # Separate from above to maintain compatibility with the saltstack formula
 node:
   ppa:
-    repository_url: https://deb.nodesource.com/node_10.x
+    repository_url: https://deb.nodesource.com/node_12.x
