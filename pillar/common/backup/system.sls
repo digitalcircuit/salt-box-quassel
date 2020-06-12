@@ -49,7 +49,7 @@ common:
                   echo "Error: 'rclone' is not installed" >&2
                   return 1
               fi
-              if [ ! -f ]; then
+              if [ ! -f "$RCLONE_ARCHIVE_CONFIG" ]; then
                   echo "Error: rclone configuration file '$RCLONE_ARCHIVE_CONFIG' is not set up" >&2
                   return 1
               fi
