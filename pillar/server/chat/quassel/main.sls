@@ -30,7 +30,7 @@ server:
         strict-ident: False
         # Limit what networks can be used from any Quassel account
         strict-networks:
-          # If enabled, only whitelisted networks below are allowed
+          # If enabled, only networks listed below are allowed
           enabled: False
           # Whitelist of IRC networks (domain names and/or IP addresses)
           #

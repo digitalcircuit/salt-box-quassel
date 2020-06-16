@@ -1,7 +1,7 @@
-# Part of network-user-whitelist.service
+# Part of network-user-lockdown.service
 # See https://wiki.archlinux.org/index.php/Systemd/Timers
 [Unit]
-Description=Refresh user network whitelisting
+Description=Refresh user network lockdown
 
 [Timer]
 # OnBoot handles first start, UnitActive handles subsequent

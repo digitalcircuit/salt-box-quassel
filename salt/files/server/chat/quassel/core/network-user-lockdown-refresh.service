@@ -1,0 +1,15 @@
+# systemd unit file for network-user-lockdown-refresh
+# Based on:  https://bbs.archlinux.org/viewtopic.php?id=148170
+# And: https://blog.hqcodeshop.fi/archives/93-Handling-varrun-with-systemd.html
+[Unit]
+Description=Refresh user network lockdown
+Requires=network-user-lockdown.service
+After=network-user-lockdown.service
+
+[Service]
+Type=oneshot
+# Refresh the network-user-lockdown service
+ExecStart=/bin/systemctl reload network-user-lockdown.service
+
+[Install]
+WantedBy=multi-user.target

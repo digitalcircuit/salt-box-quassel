@@ -207,23 +207,23 @@ server.chat.quassel.core.backupmgr:
 server.chat.quassel.core.netlockdown.program.vars:
   # Programs
   file.managed:
-    - name: /root/salt/quassel/network-user-whitelist-vars.sh
-    - source: salt://files/server/chat/quassel/core/network-user-whitelist-vars.sh
+    - name: /root/salt/quassel/network-user-lockdown-vars.sh
+    - source: salt://files/server/chat/quassel/core/network-user-lockdown-vars.sh
     - makedirs: True
     # Apply pillar configuration
     - template: jinja
 server.chat.quassel.core.netlockdown.program.script:
   file.managed:
-    - name: /root/salt/quassel/network-user-whitelist-configure.sh
-    - source: salt://files/server/chat/quassel/core/network-user-whitelist-configure.sh
+    - name: /root/salt/quassel/network-user-lockdown-configure.sh
+    - source: salt://files/server/chat/quassel/core/network-user-lockdown-configure.sh
     - makedirs: True
     # Mark as executable
     - mode: 755
 server.chat.quassel.core.netlockdown.service.unit:
   # Unit for startup
   file.managed:
-    - name: /etc/systemd/system/network-user-whitelist.service
-    - source: salt://files/server/chat/quassel/core/network-user-whitelist.service
+    - name: /etc/systemd/system/network-user-lockdown.service
+    - source: salt://files/server/chat/quassel/core/network-user-lockdown.service
   cmd.run:
     - name: systemctl --system daemon-reload
     - onchanges:
@@ -231,7 +231,7 @@ server.chat.quassel.core.netlockdown.service.unit:
 server.chat.quassel.core.netlockdown.service.running:
   # Enable startup
   service.running:
-    - name: network-user-whitelist
+    - name: network-user-lockdown
     - enable: True
     - require:
       - cmd: server.chat.quassel.core.netlockdown.service.unit
@@ -242,8 +242,8 @@ server.chat.quassel.core.netlockdown.service.running:
 server.chat.quassel.core.netlockdown.refresh.service.unit:
   # Unit for startup
   file.managed:
-    - name: /etc/systemd/system/network-user-whitelist-refresh.service
-    - source: salt://files/server/chat/quassel/core/network-user-whitelist-refresh.service
+    - name: /etc/systemd/system/network-user-lockdown-refresh.service
+    - source: salt://files/server/chat/quassel/core/network-user-lockdown-refresh.service
   cmd.run:
     - name: systemctl --system daemon-reload
     - onchanges:
@@ -251,7 +251,7 @@ server.chat.quassel.core.netlockdown.refresh.service.unit:
 server.chat.quassel.core.netlockdown.refresh.service.running:
   # Enable startup
   service.enabled:
-    - name: network-user-whitelist-refresh
+    - name: network-user-lockdown-refresh
     - require:
       - cmd: server.chat.quassel.core.netlockdown.refresh.service.unit
       - service: server.chat.quassel.core.netlockdown.service.running
@@ -260,8 +260,8 @@ server.chat.quassel.core.netlockdown.refresh.service.running:
 server.chat.quassel.core.netlockdown.refresh.timer.unit:
   # Unit for periodic refresh
   file.managed:
-    - name: /etc/systemd/system/network-user-whitelist-refresh.timer
-    - source: salt://files/server/chat/quassel/core/network-user-whitelist-refresh.timer
+    - name: /etc/systemd/system/network-user-lockdown-refresh.timer
+    - source: salt://files/server/chat/quassel/core/network-user-lockdown-refresh.timer
   cmd.run:
     - name: systemctl --system daemon-reload
     - onchanges:
@@ -269,7 +269,7 @@ server.chat.quassel.core.netlockdown.refresh.timer.unit:
 server.chat.quassel.core.netlockdown.refresh.timer.running:
   # Enable periodic refresh
   service.running:
-    - name: network-user-whitelist-refresh.timer
+    - name: network-user-lockdown-refresh.timer
     - enable: True
     - require:
       - cmd: server.chat.quassel.core.netlockdown.refresh.timer.unit
@@ -281,19 +281,64 @@ server.chat.quassel.core.netlockdown.refresh.timer.running:
 # This *should* disable the rules
 server.chat.quassel.core.netlockdown.cleanup.service:
   service.dead:
-    - name: network-user-whitelist
+    - name: network-user-lockdown
     - enable: False
 server.chat.quassel.core.netlockdown.cleanup.refresh.timer:
   service.dead:
-    - name: network-user-whitelist-refresh.timer
+    - name: network-user-lockdown-refresh.timer
     - enable: False
 server.chat.quassel.core.netlockdown.cleanup.refresh.service.running:
   # Disable startup
   service.disabled:
-    - name: network-user-whitelist-refresh
+    - name: network-user-lockdown-refresh
 {% endif %}
 
 # --- Migrations ---
+# Using more inclusive, meaningful phrasing for restricted IRC network access.
+server.chat.quassel.core.migrate-phrasing.netlockdown.cleanup.service:
+  service.dead:
+    - name: network-user-whitelist
+    - enable: False
+server.chat.quassel.core.migrate-phrasing.netlockdown.cleanup.refresh.timer:
+  service.dead:
+    - name: network-user-whitelist-refresh.timer
+    - enable: False
+server.chat.quassel.core.migrate-phrasing.netlockdown.cleanup.refresh.service.running:
+  # Disable startup
+  service.disabled:
+    - name: network-user-whitelist-refresh
+server.chat.quassel.core.migrate-phrasing.netlockdown.program.vars:
+  # Programs
+  file.absent:
+    - name: /root/salt/quassel/network-user-whitelist-vars.sh
+server.chat.quassel.core.migrate-phrasing.netlockdown.program.script:
+  file.absent:
+    - name: /root/salt/quassel/network-user-whitelist-configure.sh
+server.chat.quassel.core.migrate-phrasing.netlockdown.service.unit:
+  # Unit for startup
+  file.absent:
+    - name: /etc/systemd/system/network-user-whitelist.service
+  cmd.run:
+    - name: systemctl --system daemon-reload
+    - onchanges:
+      - file: server.chat.quassel.core.migrate-phrasing.netlockdown.service.unit
+server.chat.quassel.core.migrate-phrasing.netlockdown.refresh.service.unit:
+  # Unit for startup
+  file.absent:
+    - name: /etc/systemd/system/network-user-whitelist-refresh.service
+  cmd.run:
+    - name: systemctl --system daemon-reload
+    - onchanges:
+      - file: server.chat.quassel.core.migrate-phrasing.netlockdown.refresh.service.unit
+server.chat.quassel.core.migrate-phrasing.netlockdown.refresh.timer.unit:
+  # Unit for periodic refresh
+  file.absent:
+    - name: /etc/systemd/system/network-user-whitelist-refresh.timer
+  cmd.run:
+    - name: systemctl --system daemon-reload
+    - onchanges:
+      - file: server.chat.quassel.core.migrate-phrasing.netlockdown.refresh.timer.unit
+
 # Renaming files to better indicate purpose
 # Remove old Let's Encrypt service override script
 server.chat.quassel.core.service.specify_certs:
