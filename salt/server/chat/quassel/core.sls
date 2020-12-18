@@ -44,7 +44,7 @@ server.chat.quassel.core.service.config.exec:
 # Clean up stable/beta version
 server.chat.quassel.core.repo.channel_cleanup:
   pkgrepo.absent:
-{% if salt['pillar.get']('versions:quassel:core:beta', False) == True %}
+{% if salt['pillar.get']('server:chat:quassel:versions:core:beta', False) == True %}
     # Beta requested, disable the non-beta PPA
     - ppa: mamarley/quassel
 {% else %}
@@ -55,7 +55,7 @@ server.chat.quassel.core.repo.channel_cleanup:
 # Install Quassel PPA
 server.chat.quassel.core.repo:
   pkgrepo.managed:
-{% if salt['pillar.get']('versions:quassel:core:beta', False) == True %}
+{% if salt['pillar.get']('server:chat:quassel:versions:core:beta', False) == True %}
     # Beta requested
     - ppa: mamarley/quassel-beta
     - comments:

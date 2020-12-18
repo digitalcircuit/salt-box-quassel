@@ -27,8 +27,8 @@ server.chat.quassel.search:
     - name: 'https://github.com/justjanne/quassel-rest-search.git'
     - target: {{ qsearch_html_dir }}/search
     - user: www-manage
-    - rev: {{ salt['pillar.get']('versions:quassel:search:revision', 'HEAD') }}
-    - branch: {{ salt['pillar.get']('versions:quassel:search:branch', 'master') }}
+    - rev: {{ salt['pillar.get']('server:chat:quassel:versions:search:revision', 'HEAD') }}
+    - branch: {{ salt['pillar.get']('server:chat:quassel:versions:search:branch', 'master') }}
     - force_reset: True
     - require:
       - sls: 'server.chat.quassel.core'
