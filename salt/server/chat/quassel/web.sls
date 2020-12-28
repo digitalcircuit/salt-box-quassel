@@ -72,6 +72,8 @@ server.chat.quassel.web.dependencies:
       # Ubuntu 20.04+ - originally used Python 2, now Python 3 works
       - python3
       - build-essential
+      # For Salt to download repo
+      - python3-git
     - require:
       # Require NodeJS
       - sls: 'common.nodejs'
@@ -98,6 +100,8 @@ server.chat.quassel.web.repo:
     - require:
       # Need parent folder created
       - file: server.chat.quassel.web.repo
+      # Need git
+      - pkg: server.chat.quassel.web.dependencies
 
 server.chat.quassel.web.repo.build.npm:
   cmd.run:

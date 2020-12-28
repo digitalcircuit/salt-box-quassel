@@ -14,6 +14,12 @@ server.chat.quassel.search.parentdir:
     - name: {{ qsearch_html_dir }}
     - makedirs: True
 
+server.chat.quassel.search.repodepends:
+  pkg.installed:
+    - pkgs:
+      # For Salt to download repo
+      - python3-git
+
 server.chat.quassel.search:
   file.directory:
     - name: {{ qsearch_html_dir }}/search
@@ -33,6 +39,8 @@ server.chat.quassel.search:
     - require:
       - sls: 'server.chat.quassel.core'
       - user: www-data-manager
+      # Need git
+      - pkg: server.chat.quassel.search.repodepends
 
 server.chat.quassel.search.config:
   file.managed:
