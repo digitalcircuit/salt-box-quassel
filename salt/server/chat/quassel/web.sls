@@ -69,7 +69,8 @@ server.chat.quassel.web.dependencies:
     - pkgs:
       # Dependencies for NodeJS package building (e.g. BufferUtil)
       # See https://github.com/magne4000/quassel-webserver/commit/79776c7a5db163273217fb87a76c8c27bfec9a45
-      - python
+      # Ubuntu 20.04+ - originally used Python 2, now Python 3 works
+      - python3
       - build-essential
     - require:
       # Require NodeJS

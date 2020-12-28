@@ -16,6 +16,14 @@ certbot.config.challenges:
 
 # Install Certbot itself
 # It's recommended to use the upstream version, even though certbot is in the repos
+#
+# Ubuntu 20.04+ - the certbot PPA is deprecated, replaced by the snap version.
+# Migrate to the snap version if needed.  For now, just use the distribution package.
+{% set certbot_minver = '0.40.0' %}
+{% set certbot_distver = salt['pkg.list_repo_pkgs']('certbot')['certbot'] |first() %}
+{% set certbot_distver_new_enough = (salt['pkg.version_cmp'](certbot_distver, certbot_minver) >= 0) %}
+
+{% if certbot_distver_new_enough == False %}
 certbot.ppa:
   pkgrepo.managed:
     - ppa: certbot/certbot
@@ -23,13 +31,16 @@ certbot.ppa:
     # Only update if changes are made
     - onchanges:
       - pkgrepo: certbot.ppa
+{% endif %}
 
 certbot:
   pkg.installed:
     - pkgs:
       - certbot
+{% if certbot_distver_new_enough == False %}
     - require:
       - pkgrepo: certbot.ppa
+{% endif %}
 
 # Set up renewal hooks
 # Do before installation so any running services will be reloaded

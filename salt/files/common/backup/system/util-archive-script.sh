@@ -298,11 +298,54 @@ archive_restore_psql_db () {
 		echo "Error: unable to restore, temporary file '$PSQL_TEMP_FILE' does not exist" >&2
 		return 1
 	fi
+
 	# > Remove existing database first
-	sudo --user=postgres --login psql --quiet --command="DROP DATABASE IF EXISTS $PSQL_DB_NAME;"
+	sudo --user=postgres --login psql --quiet --command="DROP DATABASE IF EXISTS $PSQL_DB_NAME;" || return 1
+
 	# Database name is ignored when using "--create"
 	# --dbname="$PSQL_DB_NAME"
-	sudo --user=postgres --login pg_restore --no-password --format=custom --jobs="$PSQL_JOBS" --create --dbname="postgres" "$PSQL_TEMP_FILE" || return 1
+	if ! sudo --user=postgres --login pg_restore --no-password --format=custom --jobs="$PSQL_JOBS" --create --dbname="postgres" "$PSQL_TEMP_FILE" ; then
+		# PostgreSQL 10->11 schema overlap fails
+		# TODO: Can this cause issues?
+		#
+		# https://www.postgresql.org/message-id/15466-0b90383ff69c6e4b%40postgresql.org
+		#
+		# Workaround this by removing the schema creation
+
+		echo "[archive_restore_psql_db] Warning: problem restoring, inspecting backup Table Of Contents..." >&2
+
+		local PSQL_TEMP_FILE_TOC="$PSQL_TEMP_FILE.toc.txt"
+		echo "[archive_restore_psql_db] Saving Table Of Contents..."
+		sudo --user=postgres --login pg_restore --no-password --format=custom --jobs="$PSQL_JOBS" --list --file "$PSQL_TEMP_FILE_TOC" "$PSQL_TEMP_FILE" || return 1
+
+		# Check PostgreSQL dump version
+		local PSQL_DUMP_VERSION=$(grep "Dumped by pg_dump version" "$PSQL_TEMP_FILE_TOC" | sed --regexp-extended --expression="s/.*;     Dumped by pg_dump version: ([0-9.]*).*$/\1/g")
+		if dpkg --compare-versions "$PSQL_DUMP_VERSION" ge "11"; then
+			echo "Error: database backup is from PostgreSQL version $PSQL_DUMP_VERSION (>= 11), should not be affected by public schema issue" >&2
+			return 1
+		fi
+
+		# Check for schema command
+		if ! grep -q "; 2615 2200 SCHEMA - public postgres" "$PSQL_TEMP_FILE_TOC" ; then
+			echo "Error: public schema not in TOC, restore could not be recovered" >&2
+			return 1
+		fi
+
+		echo "[archive_restore_psql_db] Confirmed issue, applying PostgreSQL v10->v11 workaround"
+		echo "  See https://www.postgresql.org/message-id/15466-0b90383ff69c6e4b%40postgresql.org"
+
+		# > Remove existing database first (again, should have been recreated above)
+		echo "[archive_restore_psql_db] Removing existing database..."
+		sudo --user=postgres --login psql --quiet --command="DROP DATABASE IF EXISTS $PSQL_DB_NAME;" || return 1
+
+		echo "[archive_restore_psql_db] Removing public schema creation from older backup..."
+		sed --in-place --expression="/[0-9]*; 2615 2200 SCHEMA - public postgres/d" "$PSQL_TEMP_FILE_TOC" || return 1
+		echo "[archive_restore_psql_db] Restoring without public schema..."
+		sudo --user=postgres --login pg_restore --no-password --format=custom --jobs="$PSQL_JOBS" --create --dbname="postgres" --use-list "$PSQL_TEMP_FILE_TOC" "$PSQL_TEMP_FILE" || return 1
+		# Clean TOC up as well
+		rm "$PSQL_TEMP_FILE_TOC" || return 1
+	fi
+
 	# > Move temporary file back, restore permissions
 	mv "$PSQL_TEMP_FILE" "$INPUT_ARCHIVE_FILE" || return 1
 	chown root:root "$INPUT_ARCHIVE_FILE" || return 1
