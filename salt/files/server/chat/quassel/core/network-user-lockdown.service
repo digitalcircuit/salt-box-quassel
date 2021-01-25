@@ -24,6 +24,10 @@ ProtectKernelTunables=true
 ProtectControlGroups=true
 # Allow inserting iptables/ip6tables kernel modules
 #ProtectKernelModules=true
+# Ubuntu 20.04: Allow iptables/ip6tables to acquire a runtime lock
+# /run/xtables.lock
+# Is there a better way to limit this?
+ReadWritePaths=/run
 PrivateDevices=true
 SystemCallArchitectures=native
 CapabilityBoundingSet=~CAP_SYS_ADMIN
