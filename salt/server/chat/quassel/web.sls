@@ -103,39 +103,6 @@ server.chat.quassel.web.repo:
       # Need git
       - pkg: server.chat.quassel.web.dependencies
 
-{% set brokenver_openssl = '1.1.1f' %}
-{% set localver_openssl = salt['pkg.list_repo_pkgs']('openssl')['openssl'] |first() %}
-{% if grains.os_family == 'Debian' and salt['pkg.version_cmp'](localver_openssl, brokenver_openssl) >= 0 %}
-{# See https://stackoverflow.com/questions/41479482/how-do-i-allow-a-salt-stack-formula-to-run-on-only-certain-operating-system-vers #}
-# Need to disable "securecore" by default for Debian with
-# openssl >= {{ brokenver_openssl }} until SSL issue is resolved
-# See https://github.com/magne4000/quassel-webserver/issues/285
-# As the core connection is via 'localhost', the potential impact is reduced
-#
-# Don't apply this hack unless necessary to avoid needless patching on older
-# systems.
-#
-# HACK: Work around "securecore" default setting not being applied.
-# Remove this once merged upstream.
-# See https://github.com/magne4000/quassel-webserver/pull/290
-#
-# FIXME: This results in restarting Quassel Webserver every time due to git
-# resetting the patch.  If this does not get merged soon, find a better
-# approach to hotfixing this.
-server.chat.quassel.web.repo.patch.securecore:
-  file.patch:
-    - name: {{ qweb_home_dir }}/quassel_web_root/qweb/quassel-webserver/public/javascripts/angular-init.js
-    - source: salt://files/server/chat/quassel/web/quassel-webserver-pull-290-fix-defaults-securecore.patch
-    - user: {{ qweb_user }}
-    - group: {{ qweb_user }}
-    # Set up after repo
-    - require:
-      - git: server.chat.quassel.web.repo
-    # Require in the service
-    - require_in:
-      - service: server.chat.quassel.web.service
-{% endif %}
-
 server.chat.quassel.web.repo.build.npm:
   cmd.run:
     # Run install, not updating the package-lock.json file, then prune afterwards
