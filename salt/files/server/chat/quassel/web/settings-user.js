@@ -4,7 +4,17 @@ module.exports = {
         port: {{ salt['pillar.get']('server:chat:quassel:core:port', '4242') }},  // quasselcore port
         initialBacklogLimit: 20,  // Amount of backlogs to fetch per buffer on connection
         backlogLimit: 100,  // Amount of backlogs to fetch per buffer after first retrieval
+        {%- set brokenver_openssl = '1.1.1f' -%}
+        {%- set localver_openssl = salt['pkg.list_repo_pkgs']('openssl')['openssl'] |first() -%}
+        {% if grains.os_family == 'Debian' and salt['pkg.version_cmp'](localver_openssl, brokenver_openssl) >= 0 %}
+        {# See https://stackoverflow.com/questions/41479482/how-do-i-allow-a-salt-stack-formula-to-run-on-only-certain-operating-system-vers -#}
+        securecore: false,  // Connect to the core using SSL
+        // Disable this by default for Debian with openssl >= {{ brokenver_openssl }} until SSL issue is resolved
+        // See https://github.com/magne4000/quassel-webserver/issues/285
+        // As the core connection is via 'localhost', the potential impact is reduced
+        {% else %}
         securecore: true,  // Connect to the core using SSL
+        {% endif -%}
         theme: 'default',  // Default UI theme
         perchathistory: true,  // Separate history per buffer
         displayfullhostmask: false,  // Display full hostmask instead of just nicks in messages
