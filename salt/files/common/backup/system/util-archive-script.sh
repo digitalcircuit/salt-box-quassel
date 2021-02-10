@@ -175,15 +175,24 @@ archive_backup_directory ()
 		## {test/pattern*, test/pattern2*.ext}
 	fi
 
-	# rsyncable modifes the gzip compression format to be more friendly with rsync
+	# rsyncable modifies the gzip compression format to be more friendly with rsync
+	#
+	# "GZIP" environment variable is deprecated, replace with flag
+	# After:
+	#   nice ionice -c 3 tar --use-compress-program="$GZIP_RSYNCABLE" -cf
+	# Before:
+	#   GZIP="--rsyncable" nice ionice -c 3 tar -czf
+	#
+	# See https://stackoverflow.com/questions/46167772/with-gnu-gzip-environment-variable-deprecated-how-to-control-zlib-compression-v
+	local GZIP_RSYNCABLE="gzip --rsyncable"
 	if [[ "$ARCHIVE_ENCRYPT_ENABLE" == "true" ]]; then
 		# > Encrypted
-		(GZIP="--rsyncable" nice ionice -c 3 tar --gzip --create --file - --directory "$DIR_ROOT_PARENT" $TAR_EXCLUDE_FLAG ${DIR_ARCHIVE_PATHS[@]} | $ARCHIVE_ENCRYPT_FILTER > "$DIR_ARCHIVE_NAME.$ARCHIVE_BACKUP_TAR_EXT_PGP" ) || return 1
+		(nice ionice -c 3 tar --use-compress-program="$GZIP_RSYNCABLE" --create --file - --directory "$DIR_ROOT_PARENT" $TAR_EXCLUDE_FLAG ${DIR_ARCHIVE_PATHS[@]} | $ARCHIVE_ENCRYPT_FILTER > "$DIR_ARCHIVE_NAME.$ARCHIVE_BACKUP_TAR_EXT_PGP" ) || return 1
 		# -z is gzip, -J is xz (lzma2)
 		# ${ARGS[@]:3:$ARGS_LEN} is replaced by ${DIR_ARCHIVE_PATHS[@]}
 	else
 		# > Direct
-		GZIP="--rsyncable" nice ionice -c 3 tar --gzip --create --file "$DIR_ARCHIVE_NAME.$ARCHIVE_BACKUP_TAR_EXT" --directory $TAR_EXCLUDE_FLAG "$DIR_ROOT_PARENT" ${DIR_ARCHIVE_PATHS[@]} || return 1
+		nice ionice -c 3 tar --use-compress-program="$GZIP_RSYNCABLE" --create --file "$DIR_ARCHIVE_NAME.$ARCHIVE_BACKUP_TAR_EXT" --directory $TAR_EXCLUDE_FLAG "$DIR_ROOT_PARENT" ${DIR_ARCHIVE_PATHS[@]} || return 1
 	fi
 }
 
