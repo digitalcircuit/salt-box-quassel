@@ -254,6 +254,16 @@ archive_encrypt_prepare ()
 	# the trust model.
 	#
 	# WARNING: Use full (not long, not short) key IDs!
+
+	# Try encrypting something to verify functionality
+	local TEMP_FILE="$(mktemp)" || return 1
+	if ! (echo "Current date/time: $(date)" | $ARCHIVE_ENCRYPT_FILTER > "$TEMP_FILE"); then
+		echo "Error: failed to encrypt using GPG!" >&2
+		rm "$TEMP_FILE" || return 1
+		return 1
+	fi
+	# Clean up
+	rm "$TEMP_FILE" || return 1
 }
 
 archive_run_backup ()
