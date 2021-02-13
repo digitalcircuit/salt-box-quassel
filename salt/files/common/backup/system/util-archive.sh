@@ -66,7 +66,7 @@ ARCHIVE_WORKDIR_LOG_FILE="$ARCHIVE_WORKDIR_PATH/archive.log.txt"
 # Encryption
 # > Private variable parts
 ARCHIVE_ENCRYPT_GPG_HOME="$ARCHIVE_DATADIR_PATH/gpg"
-ARCHIVE_ENCRYPT_GPG_KEYSERVER="keyserver.ubuntu.com"
+ARCHIVE_ENCRYPT_GPG_KEYSERVER="hkps://keys.openpgp.org"
 #ARCHIVE_ENCRYPT_GPG_KEYID="$ARCHIVE_ENCRYPT_GPG_KEYID"
 ARCHIVE_ENCRYPT_GPG_APP="gpg"
 # Always trust the key (headless server, no web of trust here)
