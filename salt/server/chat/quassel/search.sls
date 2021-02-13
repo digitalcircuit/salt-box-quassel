@@ -35,6 +35,7 @@ server.chat.quassel.search:
     - user: www-manage
     - rev: {{ salt['pillar.get']('server:chat:quassel:versions:search:revision', 'HEAD') }}
     - branch: {{ salt['pillar.get']('server:chat:quassel:versions:search:branch', 'master') }}
+    - force_fetch: True
     - force_reset: True
     - require:
       - sls: 'server.chat.quassel.core'
