@@ -10,3 +10,10 @@ location ^~ /.well-known/acme-challenge {
 	default_type "text/plain";
 	try_files $uri =404;
 }
+
+# Redirect requests to .well-known/pki-validation
+location ^~ /.well-known/pki-validation {
+	alias /var/lib/letsencrypt/.well-known/pki-validation;
+	default_type "text/plain";
+	try_files $uri =404;
+}
