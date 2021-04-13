@@ -32,7 +32,7 @@ server:
         strict-networks:
           # If enabled, only networks listed below are allowed
           enabled: False
-          # Whitelist of IRC networks (domain names and/or IP addresses)
+          # List of allowed IRC networks (domain names and/or IP addresses)
           #
           # NOTE - Domain names are translated to IP addresses, refreshed
           # periodically.  If you make use of round-robin DNS, you will need to
@@ -41,7 +41,7 @@ server:
             - "irc.example.invalid"
             - "server-a.example.invalid"
             - "server-b.example.invalid"
-          # Whitelist of allowed ports for IRC connections
+          # List of allowed ports for IRC connections
           ports:
             - 6667
             - 6697
