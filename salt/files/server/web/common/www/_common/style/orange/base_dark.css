@@ -1,21 +1,101 @@
+/* Dark theme - default/light-ish mode */
 body {
 	background-color: #282828;
 	color: white;
 }
 
+div#wrap {
+	background-color: #381400;
+	/* Originally #461900 */
+}
+
 a:link {
-	color: #ff8000;
+	color: #ffa726;
+	/* Originally #ff8000 */
 }
 
 a:visited {
-	color: #ba4f0e;
+	color: #ff80ff;
+	/* Originally #ba4f0e */
 }
 
-div#wrap {
-	background-color: #461900;
+a.link_button_blue {
+	background-color: #0f53ba;
+	border: 1px solid #0a3678;
+	color: white;
+}
+
+a.link_button_orange {
+	background-color: #9e2f00;
+	border: 1px solid #6b2000;
+	color: white;
+}
+
+a.link_button_gray {
+	background-color: #455a64;
+	border: 1px solid #37474f;
+	color: white;
+}
+
+a.link_button_light_gray {
+	background-color: #525252;
+	border: 1px solid #313131;
+	color: white;
 }
 
 code {
 	border:1px solid #1212;
-	background-color: rgba(255,255,255,0.14);
+	background-color: rgba(0,0,0,0.25);
+	/* Originally rgba(255,255,255,0.14) */
+}
+
+
+/* Dark theme - dark mode */
+@media (prefers-color-scheme: dark) {
+	body {
+		background-color: #0f0f0f;
+		color: #f0f0f0;
+	}
+
+	div#wrap {
+		background-color: #240c00;
+	}
+
+	a:link {
+		color: #ff8000;
+	}
+
+	a:visited {
+		color: #ee70ee;
+	}
+
+	a.link_button_blue {
+		background-color: #0d47a1;
+		border: 1px solid #002171;
+		color: white;
+	}
+
+	a.link_button_orange {
+		background-color: #852800;
+		border: 1px solid #541800;
+		color: white;
+	}
+
+	a.link_button_gray {
+		background-color: #455a64;
+		border: 1px solid #37474f;
+		color: white;
+	}
+
+	a.link_button_light_gray {
+		background-color: #424242;
+		border: 1px solid #212121;
+		color: white;
+	}
+
+	code {
+		border:1px solid #1212;
+		background-color: rgba(0,0,0,0.25);
+		/* Originally rgba(255,255,255,0.09) */
+	}
 }
