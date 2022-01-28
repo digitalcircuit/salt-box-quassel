@@ -19,8 +19,13 @@ add_header X-Frame-Options SAMEORIGIN always;
 # Enable Cross-Domain policies only from the server root
 add_header X-Permitted-Cross-Domain-Policies master-only always;
 
-# Enable XSS protection
-add_header X-XSS-Protection "1; mode=block" always;
+## Enable XSS protection
+#add_header X-XSS-Protection "1; mode=block" always;
+#
+# This is deprecated and can actually introduce security issues.
+#
+# See https://github.com/mastodon/mastodon/pull/17289
+# And https://github.com/xsleaks/xsleaks/wiki/Links#annex-xss-filters-information-leaks
 
 # Don't share referrer on downgrade, minimize it on different domains
 add_header Referrer-Policy "strict-origin-when-cross-origin" always;
