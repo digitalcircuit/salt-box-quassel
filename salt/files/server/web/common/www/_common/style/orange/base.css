@@ -4,6 +4,7 @@ body {
 
 /* Responsive wrapper */
 div#wrap {
+	border-radius: 0.5em;
 	margin-left: auto;
 	margin-right: auto;
 	/* Original: max-width: 50em;*/
@@ -16,6 +17,7 @@ div#wrap {
 
 @media only screen and (max-width: 50em) {
 	div#wrap {
+		border-radius: 0.25em;
 		padding: 0.25em;
 	}
 }
