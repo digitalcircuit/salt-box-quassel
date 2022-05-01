@@ -28,14 +28,17 @@ if [ $# -ge $EXPECTED_ARGS ]; then
 			fi
 			;;
 		"check" )
+			# Allow non-zero exit to capture return value
+			set +e
 			archive_check_system
 			RETURN_VALUE=$?
+			set -e
 			# Provide status in a format Salt can parse
 			# See https://docs.saltstack.com/en/latest/ref/states/all/salt.states.cmd.html#using-the-stateful-argument
 			if [ $RETURN_VALUE -eq 0 ]; then
 				echo "changed=no comment='Archive system is ready'"
 			else
-				echo "changed=no comment='Archive system is not ready'"
+				echo "changed=no comment='Archive system is not ready (check configuration, backup destination, encryption, or if a backup/restore is already in progress)'"
 			fi
 			# Return status
 			exit $RETURN_VALUE
