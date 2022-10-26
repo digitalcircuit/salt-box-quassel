@@ -17,8 +17,8 @@
 # Following applies to ALL SSL sites
 # ------------------------
 # Generated from:  https://ssl-config.mozilla.org/
-# Intermediate:  https://ssl-config.mozilla.org/#server=nginx&server-version=1.14.0&config=intermediate&openssl-version=1.1.1
-# (Also consider nginx-1.10.0 and openssl-1.0.1g for Ubuntu 16.04)
+# Intermediate:  https://ssl-config.mozilla.org/#server=nginx&version=1.18.0&config=intermediate&openssl=1.1.1f&guideline=5.6
+# (Also consider nginx-1.10.0 and openssl-1.0.1g for Ubuntu 16.04, nginx-1.14.0 and openssl-1.1.1 for 18.04)
 # 
 # START GENERATED
 ssl_session_timeout 1d;
