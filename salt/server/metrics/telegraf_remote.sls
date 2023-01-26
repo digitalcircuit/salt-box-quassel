@@ -111,6 +111,21 @@ telegraf_remote.sources.sysstat:
     - watch:
       - file: telegraf_remote.sources.sysstat
 
+# Work around Telegraf package starting on installation, resulting in the systemd service failing
+telegraf.reset_failed_service:
+  cmd.run:
+    - name: systemctl reset-failed telegraf
+    - onlyif: systemctl is-failed --quiet telegraf
+    - onchanges:
+      - pkg: telegraf_remote.pkg
+      - file: telegraf_remote.config.disable_default_output
+      - file: telegraf_remote.config.agent
+      - file: telegraf_remote.config.outputs.http
+      - file: telegraf_remote.config.inputs.ping
+      - file: telegraf_remote.config.inputs.http_response
+      - file: telegraf_remote.config.inputs.net
+      - file: telegraf_remote.config.inputs.system_overview
+
 telegraf_remote:
   service.running:
     - name: telegraf
