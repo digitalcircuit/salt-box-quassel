@@ -41,31 +41,29 @@ server.chat.quassel.core.service.config.exec:
     - makedirs: True
     - template: jinja
 
-# Clean up stable/beta version
-server.chat.quassel.core.repo.channel_cleanup:
-  pkgrepo.absent:
-{% if salt['pillar.get']('server:chat:quassel:versions:core:beta', False) == True %}
-    # Beta requested, disable the non-beta PPA
-    - ppa: mamarley/quassel
-{% else %}
-    # Stable requested, disable the beta PPA
-    - ppa: mamarley/quassel-beta
-{% endif %}
-
 # Install Quassel PPA
 server.chat.quassel.core.repo:
   pkgrepo.managed:
 {% if salt['pillar.get']('server:chat:quassel:versions:core:beta', False) == True %}
     # Beta requested
-    - ppa: mamarley/quassel-beta
+    - name: deb [signed-by=/etc/apt/keyrings/mamarley-quassel-keyring.gpg arch=amd64] https://ppa.launchpadcontent.net/mamarley/quassel-beta/ubuntu {{ grains['lsb_distrib_codename'] }} main
+    #- ppa: mamarley/quassel-beta
     - comments:
         - 'Quassel beta PPA for Ubuntu'
+    - aptkey: False
 {% else %}
     # Stable requested
-    - ppa: mamarley/quassel
+    #- ppa: mamarley/quassel
+    - name: deb [signed-by=/etc/apt/keyrings/mamarley-quassel-keyring.gpg arch=amd64] https://ppa.launchpadcontent.net/mamarley/quassel/ubuntu {{ grains['lsb_distrib_codename'] }} main
     - comments:
         - 'Quassel stable PPA for Ubuntu'
+    - aptkey: False
 {% endif %}
+    - file: /etc/apt/sources.list.d/mamarley-ubuntu-quassel.list
+    # GPG is susceptible to network errors when fetching keys
+    #- keyid: A0D47AB4E99FF9F9C0EA949A26F4EF8440618B66
+    #- keyserver: keyserver.ubuntu.com
+    - key_url: https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xa0d47ab4e99ff9f9c0ea949a26f4ef8440618b66
   pkg.uptodate:
     # Only update if changes are made
     - onchanges:
