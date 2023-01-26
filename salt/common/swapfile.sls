@@ -8,20 +8,21 @@ system_swap:
   pkg.installed:
     - name: coreutils
   cmd.run:
-    # Create '/swapfile', defaulting to 2048 MB
+    # Create '/swap.img', defaulting to 2048 MB
     - name: |
-        [ -f /swapfile ] || dd if=/dev/zero of=/swapfile bs=1M count={{ salt['pillar.get']('system:tuning:swap:size', '2048') }}
-        chmod 0600 /swapfile
-        mkswap /swapfile
+        [ -f /swap.img ] || dd if=/dev/zero of=/swap.img bs=1M count={{ salt['pillar.get']('system:tuning:swap:size', '2048') }}
+        chmod 0600 /swap.img
+        mkswap /swap.img
         swapon -a
     - unless:
-      - file /swapfile 2>&1 | grep -q "Linux/i386 swap"
+       - swapon --show=name | grep -q "NAME"
+    #   - file /swap.img 2>&1 | grep -q "Linux/i386 swap"
   mount.swap:
-    - name: /swapfile
+    - name: /swap.img
     - persist: true
 {% else %}
   ## Disable swap - no longer supported
   #mount.swapoff:
-  #  - name: /swapfile
+  #  - name: /swap.img
   # Remove swap.. somehow?
 {% endif %}
