@@ -106,6 +106,7 @@ telegraf_remote.sources.sysstat:
       - pkg: telegraf_remote.sources.sysstat
   service.running:
     - name: sysstat
+    - enable: True
     - require:
       - pkg: telegraf_remote.sources.sysstat
     - watch:
