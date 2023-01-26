@@ -13,7 +13,7 @@ server.chat.quassel.core.database:
     - pkgs:
       - libqt5sql5-psql
   postgres_user.present:
-    - encrypted: True
+    - encrypted: scram-sha-256
     - name: '{{ salt['pillar.get']('server:chat:quassel:database:username', 'quassel') }}'
     - password: '{{ salt['pillar.get']('server:chat:quassel:database:password') }}'
     - require:
