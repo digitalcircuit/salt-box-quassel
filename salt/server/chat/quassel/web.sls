@@ -105,8 +105,10 @@ server.chat.quassel.web.repo:
 
 server.chat.quassel.web.repo.build.npm:
   cmd.run:
+    # Run a clean install - https://docs.npmjs.com/cli/v9/commands/npm-ci
+    - name: npm clean-install --production
+    # Alternative: npm install --production --no-package-lock && npm prune --production --no-package-lock
     # Run install, not updating the package-lock.json file, then prune afterwards
-    - name: npm install --production --no-package-lock && npm prune
     - cwd: {{ qweb_repo_dir }}
     - runas: {{ qweb_user }}
     # Recompile on changes
