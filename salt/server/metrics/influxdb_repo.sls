@@ -9,7 +9,7 @@ influxdb_repo:
     - name: deb [signed-by=/etc/apt/keyrings/influxdb-keyring.gpg arch=amd64] https://repos.influxdata.com/{{ grains['lsb_distrib_id']|lower }} {{ grains['lsb_distrib_codename'] }} stable
     - comments: InfluxDB stable repository
     - file: /etc/apt/sources.list.d/influxdb.list
-    - key_url: https://repos.influxdata.com/influxdb.key
+    - key_url: https://repos.influxdata.com/influxdata-archive_compat.key
     - aptkey: False
   pkg.uptodate:
     # Only update if changes are made
