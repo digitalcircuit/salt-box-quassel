@@ -51,7 +51,13 @@ define('qrs_db_option_tsqueryfunction', "plainto_tsquery('english', :query)");
 define('qrs_db_option_timeout', 5000);
 
 define('qrs_backend', 'pgsql-smart');
+{%- set psql_with_ranking = '14' -%}
+{% if salt['pkg.version_cmp'](localver_psql, psql_with_ranking) >= 0 %}
+// Modern ranking support
+define('qrs_enable_ranking', true);
+{% else %}
+// Legacy fixed ranking
 define('qrs_enable_ranking', false);
-
+{% endif %}
 // If you install QRS in a subfolder, put the path to the subfolder, without trailing /, here.
 define('qrs_path_prefix', '/search');
