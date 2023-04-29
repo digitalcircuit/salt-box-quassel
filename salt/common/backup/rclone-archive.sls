@@ -16,11 +16,21 @@ include:
 {% set rclone_archive_config = '/root/salt/backup/rclone-archive/config' %}
 # Used in pillar/common/backup/system.sls, too!
 
+# Try to use the repository version if possible
+{% set rclone_minver = '1.53.3' %}
+{% set rclone_distver = salt['pkg.list_repo_pkgs']('rclone')['rclone'] |first() %}
+{% set rclone_distver_new_enough = (salt['pkg.version_cmp'](rclone_distver, rclone_minver) >= 0) %}
+
 # Install rclone
 common.backup.rclone.pkg:
   pkg.installed:
+{% if rclone_distver_new_enough == False %}
     - sources:
       - rclone: {{ salt['pillar.get']('common:backup:rclone-archive:versions:deb', 'https://downloads.rclone.org/rclone-current-linux-amd64.deb') }}
+{% else %}
+    - pkgs:
+      - rclone
+{% endif %}
     # Ensure rclone is available before configuring
     - require_in:
       - file: common.backup.system.scheduler
