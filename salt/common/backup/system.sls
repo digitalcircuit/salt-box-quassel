@@ -139,6 +139,8 @@ common.backup.system.scheduler.timer.running:
     - name: {{ archive_schedule_name_systemd }}.timer
     - enable: True
     - require:
+      - cmd: common.backup.system.scheduler
+      - file: common.backup.system.scheduler
       - cmd: common.backup.system.scheduler.timer.unit
     - watch:
       - file: common.backup.system.scheduler.timer.unit
