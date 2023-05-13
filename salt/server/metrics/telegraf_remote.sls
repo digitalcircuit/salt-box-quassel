@@ -17,7 +17,7 @@ telegraf_remote.config.disable_default_output:
   file.line:
     - name: /etc/telegraf/telegraf.conf
     - mode: replace
-    - content: '#[[outputs.influxdb]]'
+    - content: '# [[outputs.influxdb]]'
     - match: '.{0,2}\[\[outputs\.influxdb\]\]'
     - require:
       - pkg: telegraf_remote.pkg
