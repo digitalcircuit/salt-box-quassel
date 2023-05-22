@@ -10,8 +10,7 @@ OnCalendar=daily
 # Catch up as soon as possible
 Persistent=true
 # Randomize start
-AccuracySec=1us
-RandomizedDelaySec=2hr
+RandomizedDelaySec=3hr
 
 [Install]
 WantedBy=timers.target
