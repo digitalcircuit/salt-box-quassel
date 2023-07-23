@@ -27,7 +27,7 @@
 		<a class="link_button link_button_gray" href="https://quassel-irc.org/downloads" rel="external nofollow">Desktop</a><a class="link_button link_button_gray" href="https://play.google.com/store/apps/details?id=com.iskrembilen.quasseldroid" rel="external nofollow">Mobile</a>{% if salt['pillar.get']('server:chat:quassel:branding:client:show_beta', False) == True -%}<a class="link_button link_button_gray" href="https://quassel.romibi.ch/" rel="external nofollow">Desktop Alpha</a><a class="link_button link_button_gray" href="https://dl.kuschku.de/releases/quasseldroid-ng/" rel="external nofollow">Mobile Alpha</a>{%- endif %}
 	</p>
 	<div class="subtext">
-		Connect to <code>{{ salt['pillar.get']('server:hostnames:cert-primary:root') }}</code>, port <code>{{ salt['pillar.get']('server:chat:quassel:core:port', '4242') }}</code>
+		{% if salt['pillar.get']('server:chat:quassel:branding:client:show_core_connection', True) == True -%}Connect to <code>{{ salt['pillar.get']('server:hostnames:cert-primary:root') }}</code>, port <code>{{ salt['pillar.get']('server:chat:quassel:core:port', '4242') }}</code>{%- endif %}
 		<p><em>{{ salt['pillar.get']('server:chat:quassel:branding:client:prompt', "Use the desktop/mobile version when possible; it's faster and has more features") }}</em></p>
 	</div>
 </div>

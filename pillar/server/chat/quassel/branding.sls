@@ -17,6 +17,8 @@ server:
           - prompt: "Use the desktop/mobile version when possible; it's faster and has more features"
           # Show unstable versions of Quassel desktop/mobile?
           - show_beta: False
+          # Show core connection details for Quassel desktop/mobile?
+          - show_core_connection: True
         # Error pages
         errors:
           # On error pages, show a contact note?
