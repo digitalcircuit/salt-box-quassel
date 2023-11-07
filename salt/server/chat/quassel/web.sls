@@ -120,8 +120,8 @@ server.chat.quassel.web.repo.build.npm:
 server.chat.quassel.web.config:
   file.managed:
     # Basic configuration
-    - name: {{ qweb_home_dir }}/quassel_web_root/qweb/quassel-webserver/settings-user.js
-    - source: salt://files/server/chat/quassel/web/settings-user.js
+    - name: {{ qweb_home_dir }}/quassel_web_root/qweb/quassel-webserver/settings-user.cjs
+    - source: salt://files/server/chat/quassel/web/settings-user.cjs
     - user: {{ qweb_user }}
     - group: {{ qweb_user }}
     - template: jinja
@@ -162,3 +162,8 @@ server.chat.quassel.web.service:
 server.chat.quassel.web.migrations.move-user-home:
   file.absent:
     - name: {{ qweb_home_dir_legacy }}
+
+# 2023-11-7: Quassel Web changes from "settings-user.js" to "settings-user.cjs"
+server.chat.quassel.web.migrations.delete-old-config:
+  file.absent:
+    - name: {{ qweb_home_dir }}/quassel_web_root/qweb/quassel-webserver/settings-user.js

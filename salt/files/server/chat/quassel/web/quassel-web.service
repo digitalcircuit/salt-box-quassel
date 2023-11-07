@@ -36,7 +36,9 @@ ExecStartPre=-/bin/mkdir {{ salt['pillar.get']('server:chat:quassel:web:socket_d
 ExecStartPre=/bin/chown -R {{ salt['pillar.get']('server:chat:quassel:web:username', 'quassel-web') }}:{{ salt['pillar.get']('server:chat:quassel:web:username', 'quassel-web') }} {{ salt['pillar.get']('server:chat:quassel:web:socket_dir', '/var/run/quassel-web') }}
 ExecStartPre=-/bin/rm {{ salt['pillar.get']('server:chat:quassel:web:socket_dir', '/var/run/quassel-web') }}/quassel-web.sock
 # Run ExecStart with User/Group permissions above
-ExecStart=/usr/bin/node "/srv/{{ salt['pillar.get']('server:chat:quassel:web:username', 'quassel-web') }}/quassel_web_root/qweb/quassel-webserver/app.js" --socket="{{ salt['pillar.get']('server:chat:quassel:web:socket_dir', '/var/run/quassel-web') }}/quassel-web.sock"
+ExecStart=/usr/bin/node "/srv/{{ salt['pillar.get']('server:chat:quassel:web:username', 'quassel-web') }}/quassel_web_root/qweb/quassel-webserver/app.js"
+# Now handled by "settings-user.cjs"
+# --socket="{{ salt['pillar.get']('server:chat:quassel:web:socket_dir', '/var/run/quassel-web') }}/quassel-web.sock"
 
 [Install]
 WantedBy=multi-user.target

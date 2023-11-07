@@ -22,16 +22,12 @@ module.exports = {
         highlightmode: 3  // Highlight mode: 1: None, 2: Current nick, 3: All nicks from identity
     },
     webserver: {
-        socket: false,  // Tells the webserver to listen for connections on a local socket. This should be a path. Can be overridden by '--socket' argument
+        socket: '{{ salt["pillar.get"]("server:chat:quassel:web:socket_dir", "/var/run/quassel-web") }}/quassel-web.sock',  // Tells the webserver to listen for connections on a local socket. This should be a path. Can be overridden by '--socket' argument
         listen: null,  // Address on which to listen for connection, defaults to listening on all available IPs. Can be overridden by '--listen' argument
         port: null,  // Port on which to listen for connection, defaults to 64080 for http mode, 64443 for https. Can be overridden by '--port' argument
         mode: null  // can be 'http' or 'https', defaults to 'https'. Can be overridden by '--mode' argument
     },
-
-
-
-
-    themes: ['default', 'darksolarized'],  //  Available themes
+    themes: ['default', 'darksolarized'],  // Available themes
     forcedefault: true,  // Will force default host and port to be used if true, and will hide the corresponding fields in the UI.
     prefixpath: '/chat'  // Configure this if you use a reverse proxy
 };
