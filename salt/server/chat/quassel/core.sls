@@ -42,6 +42,8 @@ server.chat.quassel.core.service.config.exec:
     - template: jinja
 
 # Install Quassel PPA
+# TODO: Skip Ubuntu "noble" for now as no release exists
+{% if salt['grains.get']('oscodename', 'noble') == False %}
 server.chat.quassel.core.repo:
   pkgrepo.managed:
 {% if salt['pillar.get']('server:chat:quassel:versions:core:beta', False) == True %}
@@ -51,6 +53,8 @@ server.chat.quassel.core.repo:
     - comments:
         - 'Quassel beta PPA for Ubuntu'
     - aptkey: False
+    - require_in:
+      - pkg: server.chat.quassel.core
 {% else %}
     # Stable requested
     #- ppa: mamarley/quassel
@@ -58,6 +62,8 @@ server.chat.quassel.core.repo:
     - comments:
         - 'Quassel stable PPA for Ubuntu'
     - aptkey: False
+    - require_in:
+      - pkg: server.chat.quassel.core
 {% endif %}
     - file: /etc/apt/sources.list.d/mamarley-ubuntu-quassel.list
     # GPG is susceptible to network errors when fetching keys
@@ -70,6 +76,7 @@ server.chat.quassel.core.repo:
       - pkgrepo: server.chat.quassel.core.repo
     - require_in:
       - pkg: server.chat.quassel.core
+{% endif %}
 
 # Install Quassel itself
 server.chat.quassel.core:
@@ -77,9 +84,6 @@ server.chat.quassel.core:
 # PPA version
     - pkgs:
       - quassel-core
-    # Make sure PPA is set up first
-    - require:
-      - pkgrepo: server.chat.quassel.core.repo
 # Git version
 #    - sources:
 #      - quassel-core: salt://files/server/chat/quassel/core/quassel-core_git-tested_amd64.deb

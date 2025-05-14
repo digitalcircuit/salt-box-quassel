@@ -12,10 +12,12 @@
 nodejs.repo:
   pkgrepo.managed:
     - humanname: NodeSource Node.js Repository
-    - name: deb [signed-by=/etc/apt/keyrings/nodesource-keyring.gpg arch={{ debian_repo_arch }}] {{ salt['pillar.get']('node:ppa:repository_url', 'https://deb.nodesource.com/node_18.x') }} {{ grains['oscodename'] }} main
-    - dist: {{ grains['oscodename'] }}
+    - name: deb [signed-by=/etc/apt/keyrings/nodesource-keyring.gpg arch={{ debian_repo_arch }}] {{ salt['pillar.get']('node:ppa:repository_url', 'https://deb.nodesource.com/node_20.x') }} nodistro main
+    # As of 20.x, no more codename
+    #- name: deb [signed-by=/etc/apt/keyrings/nodesource-keyring.gpg arch={{ debian_repo_arch }}] {{ salt['pillar.get']('node:ppa:repository_url', 'https://deb.nodesource.com/node_20.x') }} {{ grains['oscodename'] }} main
+    #- dist: {{ grains['oscodename'] }}
     - file: /etc/apt/sources.list.d/nodesource.list
-    - key_url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    - key_url: https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key
     - aptkey: False
     - require_in:
       pkg: nodejs

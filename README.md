@@ -1,7 +1,7 @@
 Quassel-in-a-box
 ===============
 
-This takes a stock Ubuntu 20.04/22.04 system, and with Salt, turns it into an IRC setup with desktop, mobile, and web clients, search, a home page, and includes Let's Encrypt certificates for encrypted connections.
+This takes a stock Ubuntu 22.04/24.04 system, and with Salt, turns it into an IRC setup with desktop, mobile, and web clients, search, a home page, and includes Let's Encrypt certificates for encrypted connections.
 
 *This is not endorsed by the official [Quassel IRC project][web-quassel], [Quassel Webserver][web-quassel-web], or [Quassel Rest Search][web-quassel-rest-search]*
 

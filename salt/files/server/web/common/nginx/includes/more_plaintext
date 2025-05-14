@@ -6,6 +6,6 @@
 	#
 
 # Set these files as text/plain
-location ~ \.(sh|conf|cfg|diff|patch)$ {
+location ~ \.(cfg|conf|cs|diff|patch|sh)$ {
 	default_type text/plain;
 }
