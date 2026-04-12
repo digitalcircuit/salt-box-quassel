@@ -20,6 +20,8 @@ server:
         password: also_change_this_database_password
       # Quassel Webserver configuration
       web:
+        # Enable Quassel web?
+        enabled: True
         # User for running NodeJS
         username: quassel-web
         # Directory for local Unix listening socket

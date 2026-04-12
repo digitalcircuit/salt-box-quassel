@@ -8,6 +8,8 @@
 
 {% set qweb_home_dir_legacy = '/home' | path_join(qweb_user) %}
 
+{% if salt['pillar.get']('server:chat:quassel:web:enabled', True) == True %}
+
 # Require Quassel and NodeJS to be installed first
 include:
   - .core
@@ -167,3 +169,13 @@ server.chat.quassel.web.migrations.move-user-home:
 server.chat.quassel.web.migrations.delete-old-config:
   file.absent:
     - name: {{ qweb_home_dir }}/quassel_web_root/qweb/quassel-webserver/settings-user.js
+
+{% else %}
+
+# Stop and disable the service
+server.chat.quassel.web.disable:
+  service.dead:
+    - name: quassel-web
+    - enable: False
+
+{% endif %}
