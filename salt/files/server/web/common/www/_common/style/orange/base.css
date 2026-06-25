@@ -75,6 +75,7 @@ img.img_embed {
 
 img.img_thumb {
 	max-height: 10em;
+	max-width: 90%;
 	display: block;
 	padding-bottom: 1em;
 }
